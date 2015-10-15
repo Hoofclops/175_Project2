@@ -16,20 +16,10 @@
 #include "InputOutputUtility.h"
 
 float *PixelBuffer;
-Vector2i ScreenSize = Vector2i(200, 200);
 
 int main(int argc, char *argv[])
-{
-    InputOutputUtility::QueryWindowSize();
-    
-    ///////////////////////////////////////
-    //TEST CODE////////////////////////////
-//    Line l = Line(Point(0,0), Point(400,400));
-//    l.SetAlgorithm("DDA");
-//    ObjectEditor::Instance()->CreateLine(l, true);
-    //END TEST/////////////////////////////
-    ///////////////////////////////////////
-    //hello
+{    
+    Renderer::Instance()->InitWindow(500 + 1, 500 + 1);
     
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
@@ -37,7 +27,7 @@ int main(int argc, char *argv[])
     glutInitWindowSize(screenSize.mX, screenSize.mY);
     glutInitWindowPosition(100, 100);
     
-    glutCreateWindow("Project 1");
+    glutCreateWindow("Project 2");
     glClearColor(0, 0, 0, 0); //clears the buffer of OpenGL
     glutDisplayFunc(Renderer::DisplayPixelBuffer);
     glutKeyboardFunc(InputOutputUtility::DetectInput);

@@ -33,14 +33,3 @@ void Line::SetPointB(Point p)
 {
     mB = p;
 }
-
-string Line::GetAlgorithm()
-{
-    return mLineAlgorithm;
-}
-
-void Line::SetAlgorithm(string algorithm)
-{
-    mLineAlgorithm = algorithm;
-}
-

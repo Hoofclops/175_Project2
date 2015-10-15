@@ -27,9 +27,6 @@ public:
     
     Point GetPointB();
     void SetPointB(Point p);
-    
-    string GetAlgorithm();
-    void SetAlgorithm(string algo);
 };
 
 #endif /* defined(__Project1__Line__) */

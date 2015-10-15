@@ -130,18 +130,7 @@ void Renderer::DrawScene()
     for(int i = 0; i < n; i++)
     {
         Line l = lines[i];
-        if(l.GetAlgorithm() == "Bresenham")
-        {
-            GraphicsAlgorithm::LineBresenham(l);
-        }
-        else if(l.GetAlgorithm() == "DDA")
-        {
-            GraphicsAlgorithm::LineDDA(l);
-        }
-        else
-        {
-            throw invalid_argument("Line has no algorithm");
-        }
+        GraphicsAlgorithm::LineDDA(l);
     }
     
     //Draw Clipping lines

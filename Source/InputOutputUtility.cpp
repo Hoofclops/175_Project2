@@ -119,21 +119,15 @@ void InputOutputUtility::ProcessCommandPolygon(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
 {
-    string algo = tokens[0];
-    tokens.pop_front();
-    
     deque<Vector2i> vertexPositions = ExtractVertices(tokens);
     
-    if(vertexPositions.size() != 2 ||
-       (algo != "Bresenham" &&
-        algo != "DDA"))
+    if(vertexPositions.size() != 2)
     {
         cout << "Invalid command" << endl;
         return;
     }
     
     Line line = Line(Point(vertexPositions[0].mX, vertexPositions[0].mY), Point(vertexPositions[1].mX, vertexPositions[1].mY));
-    line.SetAlgorithm(algo);
     ObjectEditor::Instance()->CreateLine(line);
 }
 
@@ -251,7 +245,6 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
             {
                 Line l = Line(Point(vertexPositions[0].mX, vertexPositions[0].mY),
                               Point(vertexPositions[1].mX, vertexPositions[1].mY));
-                l.SetAlgorithm("DDA");
                 ObjectEditor::Instance()->CreateLine(l);
             }
             else

@@ -38,7 +38,7 @@
 		6D04AB681BBA360400318CEC /* InputOutputUtility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputOutputUtility.cpp; sourceTree = "<group>"; };
 		6D04AB691BBA360400318CEC /* InputOutputUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputOutputUtility.h; sourceTree = "<group>"; };
 		6D04AB6B1BBA510E00318CEC /* poly.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = poly.txt; sourceTree = "<group>"; };
-		6D7223921BB629070001FB75 /* Project1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project1; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D7223921BB629070001FB75 /* 175_Project2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 175_Project2; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D7223951BB629070001FB75 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6D72239E1BB62A8F0001FB75 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		6D7223A01BB62A970001FB75 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -89,7 +89,7 @@
 		6D7223931BB629070001FB75 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6D7223921BB629070001FB75 /* Project1 */,
+				6D7223921BB629070001FB75 /* 175_Project2 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,8 +110,7 @@
 				6DD7F9921BB713D300086AAB /* Todo.txt */,
 				6D04AB6B1BBA510E00318CEC /* poly.txt */,
 			);
-			name = Source;
-			path = Project1;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		6DD7F97B1BB6881800086AAB /* Utilities */ = {
@@ -152,9 +151,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6D7223911BB629070001FB75 /* Project1 */ = {
+		6D7223911BB629070001FB75 /* 175_Project2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6D7223991BB629070001FB75 /* Build configuration list for PBXNativeTarget "Project1" */;
+			buildConfigurationList = 6D7223991BB629070001FB75 /* Build configuration list for PBXNativeTarget "175_Project2" */;
 			buildPhases = (
 				6D72238E1BB629070001FB75 /* Sources */,
 				6D72238F1BB629070001FB75 /* Frameworks */,
@@ -164,9 +163,9 @@
 			);
 			dependencies = (
 			);
-			name = Project1;
+			name = 175_Project2;
 			productName = Project1;
-			productReference = 6D7223921BB629070001FB75 /* Project1 */;
+			productReference = 6D7223921BB629070001FB75 /* 175_Project2 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -175,7 +174,7 @@
 		6D72238A1BB629070001FB75 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Brandon Nguyen";
 				TargetAttributes = {
 					6D7223911BB629070001FB75 = {
@@ -183,7 +182,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6D72238D1BB629070001FB75 /* Build configuration list for PBXProject "Project1" */;
+			buildConfigurationList = 6D72238D1BB629070001FB75 /* Build configuration list for PBXProject "Source" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -195,7 +194,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6D7223911BB629070001FB75 /* Project1 */,
+				6D7223911BB629070001FB75 /* 175_Project2 */,
 			);
 		};
 /* End PBXProject section */
@@ -242,6 +241,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -303,7 +303,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = 175_Project2;
 			};
 			name = Debug;
 		};
@@ -311,14 +311,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = 175_Project2;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6D72238D1BB629070001FB75 /* Build configuration list for PBXProject "Project1" */ = {
+		6D72238D1BB629070001FB75 /* Build configuration list for PBXProject "Source" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6D7223971BB629070001FB75 /* Debug */,
@@ -327,7 +327,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6D7223991BB629070001FB75 /* Build configuration list for PBXNativeTarget "Project1" */ = {
+		6D7223991BB629070001FB75 /* Build configuration list for PBXNativeTarget "175_Project2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6D72239A1BB629070001FB75 /* Debug */,

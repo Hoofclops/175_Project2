@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		6D04AB6A1BBA360400318CEC /* InputOutputUtility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D04AB681BBA360400318CEC /* InputOutputUtility.cpp */; };
+		6D3D4EC11BCF3830001BC4BA /* Vector3i.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3D4EBF1BCF3830001BC4BA /* Vector3i.cpp */; settings = {ASSET_TAGS = (); }; };
+		6D3D4EC41BCF5F4E001BC4BA /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3D4EC21BCF5F4E001BC4BA /* Point3d.cpp */; settings = {ASSET_TAGS = (); }; };
+		6D3D4EC71BCF635C001BC4BA /* Line3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3D4EC51BCF635C001BC4BA /* Line3d.cpp */; settings = {ASSET_TAGS = (); }; };
+		6D3D4ECA1BCF7141001BC4BA /* Projector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3D4EC81BCF7141001BC4BA /* Projector.cpp */; settings = {ASSET_TAGS = (); }; };
 		6D7223961BB629070001FB75 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D7223951BB629070001FB75 /* main.cpp */; };
 		6D72239F1BB62A8F0001FB75 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D72239E1BB62A8F0001FB75 /* GLUT.framework */; };
 		6D7223A11BB62A970001FB75 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7223A01BB62A970001FB75 /* OpenGL.framework */; };
@@ -38,6 +42,14 @@
 		6D04AB681BBA360400318CEC /* InputOutputUtility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputOutputUtility.cpp; sourceTree = "<group>"; };
 		6D04AB691BBA360400318CEC /* InputOutputUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputOutputUtility.h; sourceTree = "<group>"; };
 		6D04AB6B1BBA510E00318CEC /* poly.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = poly.txt; sourceTree = "<group>"; };
+		6D3D4EBF1BCF3830001BC4BA /* Vector3i.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3i.cpp; sourceTree = "<group>"; };
+		6D3D4EC01BCF3830001BC4BA /* Vector3i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector3i.h; sourceTree = "<group>"; };
+		6D3D4EC21BCF5F4E001BC4BA /* Point3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Point3d.cpp; sourceTree = "<group>"; };
+		6D3D4EC31BCF5F4E001BC4BA /* Point3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Point3d.h; sourceTree = "<group>"; };
+		6D3D4EC51BCF635C001BC4BA /* Line3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Line3d.cpp; sourceTree = "<group>"; };
+		6D3D4EC61BCF635C001BC4BA /* Line3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Line3d.h; sourceTree = "<group>"; };
+		6D3D4EC81BCF7141001BC4BA /* Projector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Projector.cpp; sourceTree = "<group>"; };
+		6D3D4EC91BCF7141001BC4BA /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Projector.h; sourceTree = "<group>"; };
 		6D7223921BB629070001FB75 /* 175_Project2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 175_Project2; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D7223951BB629070001FB75 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6D72239E1BB62A8F0001FB75 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -98,6 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				6D7223951BB629070001FB75 /* main.cpp */,
+				6D3D4EC81BCF7141001BC4BA /* Projector.cpp */,
+				6D3D4EC91BCF7141001BC4BA /* Projector.h */,
 				6DD7F97C1BB69B6100086AAB /* Renderer.cpp */,
 				6DD7F97D1BB69B6100086AAB /* Renderer.h */,
 				6DD7F99C1BB8A47600086AAB /* GraphicsAlgorithm.cpp */,
@@ -122,6 +136,8 @@
 				6DD7F9801BB69C8600086AAB /* Vector2i.h */,
 				6DD7F9931BB7324700086AAB /* Color.cpp */,
 				6DD7F9941BB7324700086AAB /* Color.h */,
+				6D3D4EBF1BCF3830001BC4BA /* Vector3i.cpp */,
+				6D3D4EC01BCF3830001BC4BA /* Vector3i.h */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -135,6 +151,10 @@
 				6DD7F9891BB6A28200086AAB /* Polygon.h */,
 				6DD7F9721BB6320600086AAB /* Point.cpp */,
 				6DD7F9731BB6320600086AAB /* Point.h */,
+				6D3D4EC21BCF5F4E001BC4BA /* Point3d.cpp */,
+				6D3D4EC31BCF5F4E001BC4BA /* Point3d.h */,
+				6D3D4EC51BCF635C001BC4BA /* Line3d.cpp */,
+				6D3D4EC61BCF635C001BC4BA /* Line3d.h */,
 			);
 			name = Geometry;
 			sourceTree = "<group>";
@@ -204,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D3D4EC71BCF635C001BC4BA /* Line3d.cpp in Sources */,
 				6DD7F9741BB6320600086AAB /* Point.cpp in Sources */,
 				6DD7F9871BB6A27600086AAB /* Line.cpp in Sources */,
 				6DD7F97E1BB69B6100086AAB /* Renderer.cpp in Sources */,
@@ -212,9 +233,12 @@
 				6DD7F9771BB6614000086AAB /* Vector3.cpp in Sources */,
 				6DD7F98A1BB6A28200086AAB /* Polygon.cpp in Sources */,
 				6DD7F99E1BB8A47600086AAB /* GraphicsAlgorithm.cpp in Sources */,
+				6D3D4EC11BCF3830001BC4BA /* Vector3i.cpp in Sources */,
+				6D3D4EC41BCF5F4E001BC4BA /* Point3d.cpp in Sources */,
 				6DB884D71BB9EBCF00D72B71 /* ObjectEditor.cpp in Sources */,
 				6D7223961BB629070001FB75 /* main.cpp in Sources */,
 				6DD7F9811BB69C8600086AAB /* Vector2i.cpp in Sources */,
+				6D3D4ECA1BCF7141001BC4BA /* Projector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

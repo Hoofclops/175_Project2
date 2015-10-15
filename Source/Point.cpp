@@ -14,7 +14,7 @@ Point::Point(Vector2i pos)
     mPos = pos;
 }
 
-Point::Point(Vector2i pos, Color color)
+Point::Point(Vector2i pos, class Color color)
 {
     mPos = pos;
     mColor = color;
@@ -26,42 +26,9 @@ Point::Point(int x, int y)
     mPos.mY = y;
 }
 
-Point::Point(int x, int y, Color color)
+Point::Point(int x, int y, class Color color)
 {
     mPos.mX = x;
     mPos.mY = y;
-    mColor = color;
-}
-
-Vector2i Point::GetPos()
-{
-    return mPos;
-}
-
-int Point::GetX()
-{
-    return mPos.mX;
-}
-void Point::SetX(int x)
-{
-    mPos.mX = x;
-    
-}
-int Point::GetY()
-{
-    return mPos.mY;
-}
-void Point::SetY(int y)
-{
-    mPos.mY = y;
-    
-}
-
-Color Point::GetColor()
-{
-    return mColor;
-}
-void Point::SetColor(Color color)
-{
     mColor = color;
 }

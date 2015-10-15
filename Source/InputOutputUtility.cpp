@@ -40,7 +40,7 @@ void InputOutputUtility::DetectInput(unsigned char key, int xmouse, int ymouse)
             break;
     }
     
-    Renderer::Instance()->DrawScene();
+    Renderer::Instance()->DrawScene(Renderer::XY);
     glutPostRedisplay();
 }
 
@@ -81,10 +81,10 @@ void InputOutputUtility::ProcessInput()
     {
         ProcessCommandRotate(tokens);
     }
-    else if(command == "Clip" || command == "clip")
-    {
-        ProcessCommandClip(tokens);
-    }
+//    else if(command == "Clip" || command == "clip")
+//    {
+//        ProcessCommandClip(tokens);
+//    }
     else if(command == "Load" || command == "load")
     {
         ProcessCommandLoadFile(tokens);
@@ -107,7 +107,7 @@ void InputOutputUtility::ProcessInput()
 
 void InputOutputUtility::ProcessCommandPolygon(deque<string> tokens)
 {
-    deque<Vector2i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
     
     if(vertexPositions.size() == 0)
     {
@@ -119,7 +119,7 @@ void InputOutputUtility::ProcessCommandPolygon(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
 {
-    deque<Vector2i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
     
     if(vertexPositions.size() != 2)
     {
@@ -133,7 +133,7 @@ void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandTranslate(deque<string> tokens)
 {
-    deque<Vector2i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
     
     if(vertexPositions.size() != 1)
     {
@@ -141,7 +141,7 @@ void InputOutputUtility::ProcessCommandTranslate(deque<string> tokens)
         return;
     }
     
-    ObjectEditor::Instance()->TranslatePolygon(vertexPositions[0]);
+//    ObjectEditor::Instance()->TranslatePolygon(vertexPositions[0]);
 }
 
 void InputOutputUtility::ProcessCommandScale(deque<string> tokens)
@@ -172,7 +172,7 @@ void InputOutputUtility::ProcessCommandRotate(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandClip(deque<string> tokens)
 {
-    deque<Vector2i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
 
     if(vertexPositions.size() != 2)
     {
@@ -180,7 +180,7 @@ void InputOutputUtility::ProcessCommandClip(deque<string> tokens)
         return;
     }
     
-    ObjectEditor::Instance()->SetClip(vertexPositions[0], vertexPositions[1]);
+//    ObjectEditor::Instance()->SetClip(vertexPositions[0], vertexPositions[1]);
 }
 
 void InputOutputUtility::ProcessCommandLoadFile(deque<string> tokens)
@@ -209,12 +209,12 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
 {
     ifstream fin;
 //   fin.open(fileName);
-     fin.open("//Users//BrandonHome//Desktop//175//Project1//Project1//" + fileName);
+     fin.open("//Users//BrandonHome//GitHub//175_Project2//DataFiles//" + fileName);
     if (!fin.good())
         throw runtime_error("Error opening poly.txt");
     
     const char* tokens[MAX_TOKENS] = {}; // initialize to 0
-    deque<Vector2i> vertexPositions;
+    deque<Vector3i> vertexPositions;
     
     while (!fin.eof())
     {
@@ -241,16 +241,16 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
         //Parse strings
         if(strcmp(tokens[0], "End") == 0 || strcmp(tokens[0], "end") == 0)
         {
-            if(vertexPositions.size() == 2)
-            {
-                Line l = Line(Point(vertexPositions[0].mX, vertexPositions[0].mY),
-                              Point(vertexPositions[1].mX, vertexPositions[1].mY));
-                ObjectEditor::Instance()->CreateLine(l);
-            }
-            else
-            {
+//            if(vertexPositions.size() == 2)
+//            {
+//                Line l = Line(Point(vertexPositions[0].mX, vertexPositions[0].mY),
+//                              Point(vertexPositions[1].mX, vertexPositions[1].mY));
+//                ObjectEditor::Instance()->CreateLine(l);
+//            }
+//            else
+//            {
                 ObjectEditor::Instance()->CreatePolygon(vertexPositions);
-            }
+//            }
             
             vertexPositions.clear();
         }
@@ -258,7 +258,8 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
         {
             int x = atoi(tokens[0]);
             int y = atoi(tokens[1]);
-            vertexPositions.push_back(Vector2i(x, y));
+            int z = atoi(tokens[2]);
+            vertexPositions.push_back(Vector3i(x, y, z));
         }
     }
     
@@ -269,31 +270,31 @@ void InputOutputUtility::SavePolygonFile(string fileName)
 {
     ofstream fout;
 //    fout.open(fileName, ofstream::out | ofstream::trunc);
-    fout.open("//Users//BrandonHome//Desktop//175//Project1//Project1//" + fileName, ofstream::out | ofstream::trunc);
+    fout.open("//Users//BrandonHome//GitHub//175_Project2//DataFiles//" + fileName, ofstream::out | ofstream::trunc);
     
     deque<Polygon> allPolys = ObjectEditor::Instance()->GetPolygons();
-    deque<Line> allLines = ObjectEditor::Instance()->GetLines();
+//    deque<Line3d> allLines = ObjectEditor::Instance()->GetLines();
     
     long polyCount = allPolys.size();
     for(unsigned int i = 0; i < polyCount; i++)
     {
-        deque<Point> vertices = allPolys[i].GetVertices();
+        deque<Point3d> vertices = allPolys[i].GetVertices();
         
         long vertexCount = vertices.size();
         for(unsigned int j = 0; j < vertexCount; j++)
         {
-            fout << vertices[j].GetX() << "," << vertices[j].GetY() << "\n";
+            fout << vertices[j].X() << "," << vertices[j].Y() << "," << vertices[j].Z() << "\n";
         }
         fout << "End" << "\n" << "\n";
     }
     
-    long lineCount = allLines.size();
-    for(unsigned int i = 0; i < lineCount; i++)
-    {
-        fout << allLines[i].GetPointA().GetX() << "," << allLines[i].GetPointA().GetY()<< "\n";
-        fout << allLines[i].GetPointB().GetX() << "," << allLines[i].GetPointB().GetY()<< "\n";
-        fout << "End" << "\n" << "\n";
-    }
+//    long lineCount = allLines.size();
+//    for(unsigned int i = 0; i < lineCount; i++)
+//    {
+//        fout << allLines[i].A().X() << "," << allLines[i].A().Y()<< "\n";
+//        fout << allLines[i].B().X() << "," << allLines[i].B().Y()<< "\n";
+//        fout << "End" << "\n" << "\n";
+//    }
     
     fout.close();
 }
@@ -327,24 +328,24 @@ deque<string> InputOutputUtility::SplitString(string s, string delims)
 
 }
 
-deque<Vector2i> InputOutputUtility::ExtractVertices(deque<string> tokens)
+deque<Vector3i> InputOutputUtility::ExtractVertices(deque<string> tokens)
 {
-    deque<Vector2i> vertexPositions;
+    deque<Vector3i> vertexPositions;
     
     long n = tokens.size();
     for(int i = 0; i < n; i++)
     {
         deque<string> vertex = SplitString(tokens[i], string("(),"));
         
-        if(vertex.size() != 2)
+        if(vertex.size() != 3)
         {
             cout << "Invalid vertex format" << endl;
             vertexPositions.clear();
             return vertexPositions;
         }
         
-        Vector2i vertPos = Vector2i(atoi(vertex[0].c_str()), atoi(vertex[1].c_str()));
-        vertexPositions.push_back(Vector2i(vertPos.mX, vertPos.mY));
+        Vector3i vertPos = Vector3i(atoi(vertex[0].c_str()), atoi(vertex[1].c_str()), atoi(vertex[2].c_str()));
+        vertexPositions.push_back(Vector3i(vertPos.mX, vertPos.mY, vertPos.mZ));
     }
     
     return vertexPositions;

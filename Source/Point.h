@@ -26,15 +26,15 @@ public:
     Point(int x, int y);
     Point(int x, int y, Color color);
     
-    Vector2i GetPos();
-    
-    int GetX();
-    void SetX(int x);
-    int GetY();
-    void SetY(int y);
-    
-    Color GetColor();
-    void SetColor(Color color);
+    //Setters and getters
+    Vector2i Position(){return mPos;}
+    void Position(Vector2i pos){mPos = pos;}
+    int X(){return mPos.mX;}
+    void X(int x){mPos.mX = x;}
+    int Y(){return mPos.mY;}
+    void Y(int y){mPos.mY = y;}
+    Color Color(){return mColor;}
+    void Color(class Color color){mColor = color;}
 };
 
 #endif /* defined(__Project1__Point__) */

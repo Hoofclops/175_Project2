@@ -33,9 +33,9 @@ void Renderer::SetScreenSize(Vector2i size)
 
 void Renderer::DrawPoint(Point point)
 {
-    int pixelStart = PosToIndex((point.GetPos()));
+    int pixelStart = PosToIndex((point.Position()));
     
-    Color color = point.GetColor();
+    Color color = point.Color();
     
     if(pixelStart >= 0 && pixelStart + 2 <= sScreenSize.mX * sScreenSize.mY * 3)
     {
@@ -61,13 +61,21 @@ void Renderer::DrawLine(Line line, Algo algo)
     }
 }
 
-void Renderer::DrawPolygon(Polygon poly)
+void Renderer::DrawPolygon(Polygon poly, ProjectionPlane plane)
 {
     //If polygon has 2 vertices, use line drawing
-    deque<Point> vertices = poly.GetVertices();
+    
+    //Project vertices
+    deque<Point> vertices;
+    if(plane == XY)
+        vertices = Projector::AxonometricXY(poly.GetVertices());
+    else if(plane == XZ)
+        vertices = Projector::AxonometricXZ(poly.GetVertices());
+    else if(plane == YZ)
+        vertices = Projector::AxonometricYZ(poly.GetVertices());
+    
     if(vertices.size() == 2)
     {
-        
         if(poly.IsSelected())
             GraphicsAlgorithm::LineDDA(Line(vertices[0], vertices[1]), true);
         else
@@ -75,18 +83,18 @@ void Renderer::DrawPolygon(Polygon poly)
         return;
     }
     
+    deque<Line> edges = VerticesToEdges(vertices);
     
-    if(poly.IsSelected())
-    {
-        GraphicsAlgorithm::PolyScanLine(poly, true);
-    }
-    else
-    {
-        GraphicsAlgorithm::PolyScanLine(poly);
-    }
+//    if(poly.IsSelected())
+//    {
+//        GraphicsAlgorithm::PolyScanLine(edges, true);
+//    }
+//    else
+//    {
+//        GraphicsAlgorithm::PolyScanLine(edges);
+//    }
+//    
     
-    
-    deque<Line> edges = poly.GetEdges();
     //draw just the edges to cover top and right edges that weren't drawn by scan line
     long edgesCount = edges.size();
     for(int i = 0; i < edgesCount; i++)
@@ -102,6 +110,23 @@ void Renderer::DrawPolygon(Polygon poly)
     }
 }
 
+deque<Line> Renderer::VerticesToEdges(deque<Point> vertices)
+{
+    deque<Line> edges;
+    
+    long n = vertices.size();
+    for(int i = 1; i < n; i++)
+    {
+        Line l = Line(vertices[i - 1], vertices[i]);
+        edges.push_back(l);
+    }
+    
+    Line closingEdge = Line(vertices[n - 1], vertices[0]);
+    edges.push_back(closingEdge);
+
+    return edges;
+}
+
 int Renderer::PosToIndex(Vector2i pos)
 {
     int width = sScreenSize.mX;
@@ -109,20 +134,20 @@ int Renderer::PosToIndex(Vector2i pos)
     return (pos.mX + width * pos.mY) * 3;
 }
 
-void Renderer::DrawScene()
+void Renderer::DrawScene(ProjectionPlane plane)
 {
     ClearBuffer();
     
     //Clip lines and polygons
-    deque<Line> lines;
-    deque<Polygon> polys;
-    ObjectEditor::Instance()->ClipScene(&lines, &polys);
+    deque<Line> lines = ObjectEditor::Instance()->GetLines();
+    deque<Polygon> polys = ObjectEditor::Instance()->GetPolygons();
+//    ObjectEditor::Instance()->ClipScene(&lines, &polys);
     
     //Draw polygons
     long n = polys.size();
     for(int i = 0; i < n; i++)
     {
-        DrawPolygon(polys[i]);
+        DrawPolygon(polys[i], plane);
     }
     
     //Draw Lines
@@ -133,20 +158,20 @@ void Renderer::DrawScene()
         GraphicsAlgorithm::LineDDA(l);
     }
     
-    //Draw Clipping lines
-    Vector2i minClip = ObjectEditor::Instance()->GetMinClip();
-    Vector2i maxClip = ObjectEditor::Instance()->GetMaxClip();
-    if(maxClip.mX < sScreenSize.mX && maxClip.mY < sScreenSize.mY)
-    {
-        Line l1 = Line(Point(minClip.mX, minClip.mY), Point(maxClip.mX, minClip.mY));
-        Line l2 = Line(Point(maxClip.mX, minClip.mY), Point(maxClip.mX, maxClip.mY));
-        Line l3 = Line(Point(maxClip.mX, maxClip.mY), Point(minClip.mX, maxClip.mY));
-        Line l4 = Line(Point(minClip.mX, maxClip.mY), Point(minClip.mX, minClip.mY));
-        GraphicsAlgorithm::LineDDA(l1);
-        GraphicsAlgorithm::LineDDA(l2);
-        GraphicsAlgorithm::LineDDA(l3);
-        GraphicsAlgorithm::LineDDA(l4);
-    }
+//    //Draw Clipping lines
+//    Vector2i minClip = ObjectEditor::Instance()->GetMinClip();
+//    Vector2i maxClip = ObjectEditor::Instance()->GetMaxClip();
+//    if(maxClip.mX < sScreenSize.mX && maxClip.mY < sScreenSize.mY)
+//    {
+//        Line l1 = Line(Point(minClip.mX, minClip.mY), Point(maxClip.mX, minClip.mY));
+//        Line l2 = Line(Point(maxClip.mX, minClip.mY), Point(maxClip.mX, maxClip.mY));
+//        Line l3 = Line(Point(maxClip.mX, maxClip.mY), Point(minClip.mX, maxClip.mY));
+//        Line l4 = Line(Point(minClip.mX, maxClip.mY), Point(minClip.mX, minClip.mY));
+//        GraphicsAlgorithm::LineDDA(l1);
+//        GraphicsAlgorithm::LineDDA(l2);
+//        GraphicsAlgorithm::LineDDA(l3);
+//        GraphicsAlgorithm::LineDDA(l4);
+//    }
 }
 
 void Renderer::ClearBuffer()

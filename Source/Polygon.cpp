@@ -8,7 +8,7 @@
 
 #include "Polygon.h"
 
-Polygon::Polygon(deque<Vector2i> vertPositions)
+Polygon::Polygon(deque<Vector3i> vertPositions)
 {
     long n = vertPositions.size();
     
@@ -18,44 +18,45 @@ Polygon::Polygon(deque<Vector2i> vertPositions)
     }
     
     //Construct lines and edges, insert them into data tables
-    Point first = Point(vertPositions[0]);
+    Point3d first = Point3d(vertPositions[0]);
     mVertices.push_back(first);
     for(int i = 1; i < n; i++)
     {
-        Point p = Point(vertPositions[i]);
+        Point3d p = Point3d(vertPositions[i]);
         mVertices.push_back(p);
     }
     
     mSelected = false;
 }
 
-deque<Point> Polygon::GetVertices()
+deque<Point3d> Polygon::GetVertices()
 {
     return mVertices;
 }
-void Polygon::SetVertex(int index, Vector2i pos)
+void Polygon::SetVertex(int index, Vector3i pos)
 {
-    mVertices[index].SetX(pos.mX);
-    mVertices[index].SetY(pos.mY);
+    mVertices[index].X(pos.mX);
+    mVertices[index].Y(pos.mY);
+    mVertices[index].Z(pos.mZ);
 }
 
-void Polygon::SetVertices(deque<Point> verts)
+void Polygon::SetVertices(deque<Point3d> verts)
 {
     mVertices = verts;
 }
 
-deque<Line> Polygon::GetEdges()
+deque<Line3d> Polygon::GetEdges()
 {
     mEdges.clear();
     
     long n = mVertices.size();
     for(int i = 1; i < n; i++)
     {
-        Line l = Line(mVertices[i - 1], mVertices[i]);
+        Line3d l = Line3d(mVertices[i - 1], mVertices[i]);
         mEdges.push_back(l);
     }
     
-    Line closingEdge = Line(mVertices[n - 1], mVertices[0]);
+    Line3d closingEdge = Line3d(mVertices[n - 1], mVertices[0]);
     mEdges.push_back(closingEdge);
     
     return mEdges;

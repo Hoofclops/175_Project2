@@ -35,7 +35,7 @@ public:
         return sInstance;
     }
     
-    void CreatePolygon(deque<Vector2i> vertPositions);
+    void CreatePolygon(deque<Vector3i> vertPositions);
     void CreateLine(Line line);
     
     void TranslatePolygon(Vector2i translationVector);

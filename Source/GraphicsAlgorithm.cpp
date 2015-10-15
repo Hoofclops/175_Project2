@@ -48,7 +48,7 @@ int GraphicsAlgorithm::DetermineCase(float dy, float dx)
 
 void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy)
 {
-    int x = a.GetX(), xEnd = b.GetX(), y = a.GetY(), yEnd = b.GetY();
+    int x = a.X(), xEnd = b.X(), y = a.Y(), yEnd = b.Y();
     int p = 2 * dy - dx;
     float m = (float)dy / (float)dx;
     
@@ -97,7 +97,7 @@ void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy)
 
 void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy)
 {
-    int x = a.GetX(), xEnd = b.GetX(), y = a.GetY(), yEnd = b.GetY();
+    int x = a.X(), xEnd = b.X(), y = a.Y(), yEnd = b.Y();
     
     //get absolute values so p is calculated correctly
     dy = fabs(dy);
@@ -157,8 +157,8 @@ bool GraphicsAlgorithm::InitScanLineValues(Line line, ScanData* data)
 {
     int yMin, yMax;
     float xVal, inverseSlope;
-    int x1 = line.GetPointA().GetX(), y1 = line.GetPointA().GetY(),
-        x2 = line.GetPointB().GetX(), y2 = line.GetPointB().GetY();
+    int x1 = line.A().X(), y1 = line.A().Y(),
+        x2 = line.B().X(), y2 = line.B().Y();
     
     //Fill y values
     if(y1 == y2)
@@ -326,19 +326,19 @@ GLubyte GraphicsAlgorithm::Encode(Point point, Vector2i minClip, Vector2i maxCli
 {
     GLubyte code = 0x00;
     
-    if(point.GetX() < minClip.mX)
+    if(point.X() < minClip.mX)
     {
         code = code | sBitCodeLeft;
     }
-    if(point.GetX() > maxClip.mX)
+    if(point.X() > maxClip.mX)
     {
         code = code | sBitCodeRight;
     }
-    if(point.GetY() < minClip.mY)
+    if(point.Y() < minClip.mY)
     {
         code = code | sBitCodeBottom;
     }
-    if(point.GetY() > maxClip.mY)
+    if(point.Y() > maxClip.mY)
     {
         code = code | sBitCodeTop;
     }
@@ -503,11 +503,11 @@ void GraphicsAlgorithm::LineDDA(Line line, bool drawGreen)
     }
     
     Renderer *renderer = Renderer::Instance();
-    Point a = line.GetPointA(), b = line.GetPointB();
+    Point a = line.A(), b = line.B();
     
-    int dx = b.GetPos().mX - a.GetPos().mX,
-        dy = b.GetPos().mY - a.GetPos().mY, steps;
-    float xIncrement, yIncrement, x = a.GetPos().mX, y = a.GetPos().mY;
+    int dx = b.Position().mX - a.Position().mX,
+        dy = b.Position().mY - a.Position().mY, steps;
+    float xIncrement, yIncrement, x = a.Position().mX, y = a.Position().mY;
     
     //determine which direction steps will orient towards
     if(fabs(dx) > fabs(dy))
@@ -540,17 +540,17 @@ void GraphicsAlgorithm::LineDDA(Line line, bool drawGreen)
 
 void GraphicsAlgorithm::LineBresenham(Line line)
 {
-    Point a = line.GetPointA(), b = line.GetPointB();
+    Point a = line.A(), b = line.B();
     //Ensure a -> b goes left to right
-    if(a.GetX() > b.GetX())
+    if(a.X() > b.X())
     {
         Point t = a;
         a = b;
         b = t;
     }
     
-    float dx = (float)(b.GetX() - a.GetX()),
-          dy = (float)(b.GetY() - a.GetY());
+    float dx = (float)(b.X() - a.X()),
+          dy = (float)(b.Y() - a.Y());
 
     //Determine case and draw line
     int c = DetermineCase(dy, dx);
@@ -571,12 +571,13 @@ void GraphicsAlgorithm::LineBresenham(Line line)
     }
 }
 
-void GraphicsAlgorithm::PolyScanLine(Polygon poly, bool drawGreen)
+void GraphicsAlgorithm::PolyScanLine(deque<Line> edges, bool drawGreen)
 {
     list<ScanData> remainingEdges;
     list<ScanData> activeEdges;
     
-    FillRemainingEdges(poly.GetEdges(), &remainingEdges);
+    
+    FillRemainingEdges(edges, &remainingEdges);
     
     //initialize current Y scan value
     int curY = remainingEdges.front().yMin;
@@ -635,46 +636,48 @@ void GraphicsAlgorithm::PolyScanLine(Polygon poly, bool drawGreen)
 
 Vector2i GraphicsAlgorithm::FindPolyCentroid(Polygon poly)
 {
-    deque<Point> vertices = poly.GetVertices();
+    return Vector2i();
     
-    float x0 = 0.0f, y0 = 0.0f, x1 = 0.0f, y1 = 0.0f;
-    float a, area = 0.0f;
-    Vector2i centroid;
-    
-    long vertexCount = vertices.size();
-    
-    //handle first vertexCount-1 vertices
-    int i;
-    for(i = 0; i < vertexCount - 1; i++)
-    {
-        x0 = vertices[i].GetX();
-        y0 = vertices[i].GetY();
-        x1 = vertices[i+1].GetX();
-        y1 = vertices[i+1].GetY();
-        a = (x0*y1) - (x1*y0);
-        area += a;
-        
-        centroid.mX += (x0 + x1) * a;
-        centroid.mY += (y0 + y1) * a;
-    }
-    
-    //handle last, closing vertex
-    x0 = vertices[i].GetX();
-    y0 = vertices[i].GetY();
-    x1 = vertices[0].GetX();
-    y1 = vertices[0].GetY();
-    a = (x0*y1) - (x1*y0);
-    area += a;
-    
-    centroid.mX += (x0 + x1) * a;
-    centroid.mY += (y0 + y1) * a;
-    
-    //Finalize calculations
-    area *= 0.5;
-    centroid.mX /= (6.0f * area);
-    centroid.mY /= (6.0f * area);
-    
-    return centroid;
+//    deque<Point> vertices = poly.GetVertices();
+//    
+//    float x0 = 0.0f, y0 = 0.0f, x1 = 0.0f, y1 = 0.0f;
+//    float a, area = 0.0f;
+//    Vector2i centroid;
+//    
+//    long vertexCount = vertices.size();
+//    
+//    //handle first vertexCount-1 vertices
+//    int i;
+//    for(i = 0; i < vertexCount - 1; i++)
+//    {
+//        x0 = vertices[i].GetX();
+//        y0 = vertices[i].GetY();
+//        x1 = vertices[i+1].GetX();
+//        y1 = vertices[i+1].GetY();
+//        a = (x0*y1) - (x1*y0);
+//        area += a;
+//        
+//        centroid.mX += (x0 + x1) * a;
+//        centroid.mY += (y0 + y1) * a;
+//    }
+//    
+//    //handle last, closing vertex
+//    x0 = vertices[i].GetX();
+//    y0 = vertices[i].GetY();
+//    x1 = vertices[0].GetX();
+//    y1 = vertices[0].GetY();
+//    a = (x0*y1) - (x1*y0);
+//    area += a;
+//    
+//    centroid.mX += (x0 + x1) * a;
+//    centroid.mY += (y0 + y1) * a;
+//    
+//    //Finalize calculations
+//    area *= 0.5;
+//    centroid.mX /= (6.0f * area);
+//    centroid.mY /= (6.0f * area);
+//    
+//    return centroid;
 }
 
 void GraphicsAlgorithm::LineClipCohenSutherland(Vector2i minClip, Vector2i maxClip, Line *line)
@@ -682,7 +685,7 @@ void GraphicsAlgorithm::LineClipCohenSutherland(Vector2i minClip, Vector2i maxCl
     GLubyte code1, code2;
     GLint done = false, plotLine = false;
     float m = 0;
-    Point p1 = line->GetPointA(), p2 = line->GetPointB();
+    Point p1 = line->A(), p2 = line->B();
     
     while(!done)
     {
@@ -696,8 +699,8 @@ void GraphicsAlgorithm::LineClipCohenSutherland(Vector2i minClip, Vector2i maxCl
         }
         else if(Reject(code1, code2)) //Reject line if completely outside
         {
-            line->SetPointA(Point(0,0));
-            line->SetPointB(Point(0,0));
+            line->A(Point(0,0));
+            line->B(Point(0,0));
             return;
         }
         else // line is partially inside
@@ -710,91 +713,93 @@ void GraphicsAlgorithm::LineClipCohenSutherland(Vector2i minClip, Vector2i maxCl
             }
             
             //use slope m to find clip field intersections
-            if(p2.GetX() != p1.GetX())
+            if(p2.X() != p1.X())
             {
-                m = ((float)(p2.GetY() - p1.GetY())) / ((float)(p2.GetX() - p1.GetX()));
+                m = ((float)(p2.Y() - p1.Y())) / ((float)(p2.X() - p1.X()));
             }
             
             if(code1 & sBitCodeLeft)
             {
-                int x = p1.GetX(), y = p1.GetY();
+                int x = p1.X(), y = p1.Y();
                 
                 y += (minClip.mX - x) * m;
                 x = minClip.mX;
                 
-                p1.SetX(x);
-                p1.SetY(y);
+                p1.X(x);
+                p1.Y(y);
             }
             else if(code1 & sBitCodeRight)
             {
-                int x = p1.GetX(), y = p1.GetY();
+                int x = p1.X(), y = p1.Y();
                 
                 y += (maxClip.mX - x) * m;
                 x = maxClip.mX;
                 
-                p1.SetX(x);
-                p1.SetY(y);
+                p1.X(x);
+                p1.Y(y);
             }
             else if(code1 & sBitCodeBottom)
             {
-                int x = p1.GetX(), y = p1.GetY();
+                int x = p1.X(), y = p1.Y();
                 
-                if(p2.GetX() != p1.GetX())
+                if(p2.X() != p1.X())
                 {
                     x += (minClip.mY - y) / m;
                 }
                 y = minClip.mY;
                 
-                p1.SetX(x);
-                p1.SetY(y);
+                p1.X(x);
+                p1.Y(y);
             }
             else if(code1 & sBitCodeTop)
             {
-                int x = p1.GetX(), y = p1.GetY();
+                int x = p1.X(), y = p1.Y();
                 
-                if(p2.GetX() != p1.GetX())
+                if(p2.X() != p1.X())
                 {
                     x += (maxClip.mY - y) / m;
                 }
                 y = maxClip.mY;
                 
-                p1.SetX(x);
-                p1.SetY(y);
+                p1.X(x);
+                p1.Y(y);
             }
         }
         
         if(plotLine)
         {
-            line->SetPointA(p1);
-            line->SetPointB(p2);
+            line->A(p1);
+            line->B(p2);
         }
     }    
 }
 
 int GraphicsAlgorithm::PolygonClipSutherlandHodgman(Vector2i minClip, Vector2i maxClip, Polygon poly, Vector2i *pOut)
 {
-    deque<Vector2i> first;
-    Vector2i s[4];
-    GLint cnt = 0;
     
-    deque<Point> vertices = poly.GetVertices();
-    long n = vertices.size();
-    for(unsigned int i = 0; i < n; i++)
-    {
-        Vector2i v = Vector2i(vertices[i].GetX(), vertices[i].GetY());
-        ClipPoint(v, Left, minClip, maxClip, pOut, &cnt, &first, s);
-    }
-    
-    //Reject if completely outside
-    if(cnt == 0)
-    {
-        pOut[0] = Vector2i(0,0);
-        pOut[1] = Vector2i(0,0);
-        return 2;
-    }
-    
-    CloseClip(minClip, maxClip, pOut, &cnt, &first, s);
-    
-    return cnt;
+    return 0;
+//    deque<Vector2i> first;
+//    Vector2i s[4];
+//    GLint cnt = 0;
+//    
+//    deque<Point> vertices = poly.GetVertices();
+//    long n = vertices.size();
+//    for(unsigned int i = 0; i < n; i++)
+//    {
+//        Vector2i v = Vector2i(vertices[i].GetX(), vertices[i].GetY());
+//        ClipPoint(v, Left, minClip, maxClip, pOut, &cnt, &first, s);
+//    }
+//    
+//    //Reject if completely outside
+//    if(cnt == 0)
+//    {
+//        pOut[0] = Vector2i(0,0);
+//        pOut[1] = Vector2i(0,0);
+//        return 2;
+//    }
+//    
+//    CloseClip(minClip, maxClip, pOut, &cnt, &first, s);
+//    
+//    return cnt;
 }
 

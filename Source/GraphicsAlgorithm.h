@@ -73,7 +73,7 @@ private:
 public:
     static void LineDDA(Line line, bool drawGreen = false);
     static void LineBresenham(Line line);
-    static void PolyScanLine(Polygon poly, bool drawGreen = false);
+    static void PolyScanLine(deque<Line> edges, bool drawGreen = false);
     static Vector2i FindPolyCentroid(Polygon poly);
     static void LineClipCohenSutherland(Vector2i minClip, Vector2i maxClip, Line *line);
     static int PolygonClipSutherlandHodgman(Vector2i minClip, Vector2i maxClip, Polygon poly, Vector2i *pOut);

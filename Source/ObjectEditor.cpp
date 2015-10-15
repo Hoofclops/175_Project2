@@ -23,7 +23,7 @@ ObjectEditor::ObjectEditor()
     sMaxClip = Vector2i(screenSize.mX, screenSize.mY);
 }
 
-void ObjectEditor::CreatePolygon(deque<Vector2i> vertPositions)
+void ObjectEditor::CreatePolygon(deque<Vector3i> vertPositions)
 {
     Polygon poly = Polygon(vertPositions);
     sPolyList.push_back(poly);
@@ -36,88 +36,88 @@ void ObjectEditor::CreateLine(Line line)
 
 void ObjectEditor::TranslatePolygon(Vector2i translationVector)
 {
-    if(sSelectedPoly == -1)
-        CycleSelectedPoly(true);
-    
-    unsigned int id = sSelectedPoly;
-    if(id >= sPolyList.size())
-    {
-        throw invalid_argument("Invalid Polygon ID");
-    }
-       
-    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
-    
-    long n = vertices.size();
-    for(int i = 0; i < n; i++)
-    {
-        int x = vertices[i].GetX(), y = vertices[i].GetY();
-        x += translationVector.mX;
-        y += translationVector.mY;
-        
-        vertices[i].SetX(x);
-        vertices[i].SetY(y);
-    }
-    sPolyList[sSelectedPoly].SetVertices(vertices);
+//    if(sSelectedPoly == -1)
+//        CycleSelectedPoly(true);
+//    
+//    unsigned int id = sSelectedPoly;
+//    if(id >= sPolyList.size())
+//    {
+//        throw invalid_argument("Invalid Polygon ID");
+//    }
+//       
+//    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
+//    
+//    long n = vertices.size();
+//    for(int i = 0; i < n; i++)
+//    {
+//        int x = vertices[i].GetX(), y = vertices[i].GetY();
+//        x += translationVector.mX;
+//        y += translationVector.mY;
+//        
+//        vertices[i].SetX(x);
+//        vertices[i].SetY(y);
+//    }
+//    sPolyList[sSelectedPoly].SetVertices(vertices);
 }
 
 void ObjectEditor::ScalePolygon(float scaleX, float scaleY)
 {
-    if(sSelectedPoly == -1)
-        CycleSelectedPoly(true);
-    
-    unsigned int id = sSelectedPoly;
-    if(id >= sPolyList.size())
-    {
-        throw invalid_argument("Invalid Polygon ID");
-    }
-    
-    Vector2i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
-    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
-    
-    long n = vertices.size();
-    for(int i = 0; i < n; i++)
-    {
-        int x = vertices[i].GetX(), y = vertices[i].GetY();
-        x = (x * scaleX) + (centroid.mX * (1 - scaleX));
-        y = (y * scaleY) + (centroid.mY * (1 - scaleY));
-        
-        vertices[i].SetX(x);
-        vertices[i].SetY(y);
-    }
-    sPolyList[sSelectedPoly].SetVertices(vertices);
+//    if(sSelectedPoly == -1)
+//        CycleSelectedPoly(true);
+//    
+//    unsigned int id = sSelectedPoly;
+//    if(id >= sPolyList.size())
+//    {
+//        throw invalid_argument("Invalid Polygon ID");
+//    }
+//    
+//    Vector2i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
+//    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
+//    
+//    long n = vertices.size();
+//    for(int i = 0; i < n; i++)
+//    {
+//        int x = vertices[i].GetX(), y = vertices[i].GetY();
+//        x = (x * scaleX) + (centroid.mX * (1 - scaleX));
+//        y = (y * scaleY) + (centroid.mY * (1 - scaleY));
+//        
+//        vertices[i].SetX(x);
+//        vertices[i].SetY(y);
+//    }
+//    sPolyList[sSelectedPoly].SetVertices(vertices);
 }
 
 void ObjectEditor::RotatePolygon(double degrees)
 {
-    if(sSelectedPoly == -1)
-        CycleSelectedPoly(true);
-    
-    unsigned int id = sSelectedPoly;
-    if(id >= sPolyList.size())
-    {
-        throw invalid_argument("Invalid Polygon ID");
-    }
-    
-    Vector2i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
-    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
-    double theta = degrees * (M_PI / 180);
-    
-    long n = vertices.size();
-    for(int i = 0; i < n; i++)
-    {
-        int x = vertices[i].GetX(), y = vertices[i].GetY();
-        double cosAngle = cos(theta);
-        double sinAngle = sin(theta);
-        double dx = x - centroid.mX;
-        double dy = y - centroid.mY;
-        
-        x = centroid.mX + (int)(dx * cosAngle - dy * sinAngle);
-        y = centroid.mY + (int)(dx * sinAngle + dy * cosAngle);
-        
-        vertices[i].SetX(x);
-        vertices[i].SetY(y);
-    }
-    sPolyList[sSelectedPoly].SetVertices(vertices);
+//    if(sSelectedPoly == -1)
+//        CycleSelectedPoly(true);
+//    
+//    unsigned int id = sSelectedPoly;
+//    if(id >= sPolyList.size())
+//    {
+//        throw invalid_argument("Invalid Polygon ID");
+//    }
+//    
+//    Vector2i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
+//    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
+//    double theta = degrees * (M_PI / 180);
+//    
+//    long n = vertices.size();
+//    for(int i = 0; i < n; i++)
+//    {
+//        int x = vertices[i].GetX(), y = vertices[i].GetY();
+//        double cosAngle = cos(theta);
+//        double sinAngle = sin(theta);
+//        double dx = x - centroid.mX;
+//        double dy = y - centroid.mY;
+//        
+//        x = centroid.mX + (int)(dx * cosAngle - dy * sinAngle);
+//        y = centroid.mY + (int)(dx * sinAngle + dy * cosAngle);
+//        
+//        vertices[i].SetX(x);
+//        vertices[i].SetY(y);
+//    }
+//    sPolyList[sSelectedPoly].SetVertices(vertices);
 }
 
 deque<Polygon> ObjectEditor::GetPolygons()
@@ -192,33 +192,33 @@ void ObjectEditor::ClearData()
 
 void ObjectEditor::ClipScene(deque<Line> *clippedLines, deque<Polygon> *clippedPolys)
 {
-    long n = sLineList.size();
-    for(unsigned int i = 0; i < n; i++)
-    {
-        Line l = sLineList[i];
-        GraphicsAlgorithm::LineClipCohenSutherland(sMinClip, sMaxClip, &l);
-        clippedLines->push_back(l);
-    }
-    
-    n = sPolyList.size();
-    for(unsigned int i = 0 ; i < n; i++)
-    {
-        Vector2i *pOut;
-        pOut = new Vector2i[100];
-        int count = GraphicsAlgorithm::PolygonClipSutherlandHodgman(sMinClip, sMaxClip, sPolyList[i], pOut);
-        
-        deque<Vector2i> vertices;
-        for(int i = 0; i < count; i++)
-        {
-            Vector2i v = Vector2i(pOut[i].mX, pOut[i].mY);
-            vertices.push_back(v);
-        }
-        Polygon p = Polygon(vertices);
-        
-        if(sPolyList[i].IsSelected())
-            p.SetSelected(true);
-        clippedPolys->push_back(p);
-    }
+//    long n = sLineList.size();
+//    for(unsigned int i = 0; i < n; i++)
+//    {
+//        Line l = sLineList[i];
+//        GraphicsAlgorithm::LineClipCohenSutherland(sMinClip, sMaxClip, &l);
+//        clippedLines->push_back(l);
+//    }
+//    
+//    n = sPolyList.size();
+//    for(unsigned int i = 0 ; i < n; i++)
+//    {
+//        Vector2i *pOut;
+//        pOut = new Vector2i[100];
+//        int count = GraphicsAlgorithm::PolygonClipSutherlandHodgman(sMinClip, sMaxClip, sPolyList[i], pOut);
+//        
+//        deque<Vector2i> vertices;
+//        for(int i = 0; i < count; i++)
+//        {
+//            Vector2i v = Vector2i(pOut[i].mX, pOut[i].mY);
+//            vertices.push_back(v);
+//        }
+//        Polygon p = Polygon(vertices);
+//        
+//        if(sPolyList[i].IsSelected())
+//            p.SetSelected(true);
+//        clippedPolys->push_back(p);
+//    }
 }
 
 void ObjectEditor::SetClip(Vector2i minClip, Vector2i maxClip)

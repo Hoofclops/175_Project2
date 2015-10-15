@@ -13,23 +13,3 @@ Line::Line(Point a, Point b)
     mA = a;
     mB = b;
 }
-
-Point Line::GetPointA()
-{
-    return mA;
-}
-
-void Line::SetPointA(Point p)
-{
-    mA = p;
-}
-
-Point Line::GetPointB()
-{
-    return mB;
-}
-
-void Line::SetPointB(Point p)
-{
-    mB = p;
-}

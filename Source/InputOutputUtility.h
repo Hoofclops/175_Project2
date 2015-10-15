@@ -20,6 +20,7 @@
 #include <iostream>
 #include "Vector2i.h"
 #include "ObjectEditor.h"
+#include "Line3d.h"
 using namespace std;
 
 class InputOutputUtility
@@ -38,7 +39,7 @@ private:
     static void ProcessCommandSaveFile(deque<string> tokens);
     
     static deque<string> SplitString(string s, string delims);
-    static deque<Vector2i> ExtractVertices(deque<string> tokens);
+    static deque<Vector3i> ExtractVertices(deque<string> tokens);
     
 public:
     static void QueryWindowSize();

@@ -23,6 +23,8 @@
 #include "Polygon.h"
 #include "GraphicsAlgorithm.h"
 #include "ObjectEditor.h"
+#include "Projector.h"
+#include "Line3d.h"
 
 //Should contain the pixel buffer and handle drawing of points, lines, and polygons
 class Renderer
@@ -37,12 +39,21 @@ private:
     //Convert coordinate position to appropriate array index in pixel buffer
     int PosToIndex(Vector2i pos);
     
+    deque<Line> VerticesToEdges(deque<Point> vertices);
+    
 public:
     
     enum Algo
     {
         DDA,
         BRESENHAM,
+    };
+    
+    enum ProjectionPlane
+    {
+        XY,
+        XZ,
+        YZ,
     };
     
     static Renderer* Instance()
@@ -59,13 +70,13 @@ public:
     
     void DrawPoint(Point point);
     void DrawLine(Line line, Algo algo);
-    void DrawPolygon(Polygon poly);
+    void DrawPolygon(Polygon poly, ProjectionPlane plane);
     
     void ClearBuffer();
     
     static void DisplayPixelBuffer();
 
-    void DrawScene();
+    void DrawScene(ProjectionPlane plane);
 };
 
 #endif /* defined(__Project1__Renderer__) */

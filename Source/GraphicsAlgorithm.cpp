@@ -46,14 +46,14 @@ int GraphicsAlgorithm::DetermineCase(float dy, float dx)
     }
 }
 
-void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy)
+void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy, int subWindow)
 {
     int x = a.X(), xEnd = b.X(), y = a.Y(), yEnd = b.Y();
     int p = 2 * dy - dx;
     float m = (float)dy / (float)dx;
     
     //Draw starting point
-    Renderer::Instance()->DrawPoint(Point(x,y));
+    Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
     
     if(m < 1)
     {
@@ -71,7 +71,7 @@ void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy)
                 y++;
                 p += twoDyMinusDx;
             }
-            Renderer::Instance()->DrawPoint(Point(x,y));
+            Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
         }
     }
     else //flip x and y roles if m > 1
@@ -90,12 +90,12 @@ void GraphicsAlgorithm::HandlePositiveSlope(Point a, Point b, int dx, int dy)
                 x++;
                 p += twoDxMinusDy;
             }
-            Renderer::Instance()->DrawPoint(Point(x,y));
+            Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
         }
     }
 }
 
-void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy)
+void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy, int subWindow)
 {
     int x = a.X(), xEnd = b.X(), y = a.Y(), yEnd = b.Y();
     
@@ -107,7 +107,7 @@ void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy)
     float m = (float)dy / (float)dx;
     
     //Draw starting point
-    Renderer::Instance()->DrawPoint(Point(x,y));
+    Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
     
     if(m < 1)
     {
@@ -125,7 +125,7 @@ void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy)
                 y--;
                 p += twoDyMinusDx;
             }
-            Renderer::Instance()->DrawPoint(Point(x,y));
+            Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
         }
     }
     else
@@ -144,7 +144,7 @@ void GraphicsAlgorithm::HandleNegativeSlope(Point a, Point b, int dx, int dy)
                 x++;
                 p += twoDxMinusDy;
             }
-            Renderer::Instance()->DrawPoint(Point(x,y));
+            Renderer::Instance()->DrawPoint(Point(x,y), subWindow);
         }
     }
 }
@@ -250,7 +250,7 @@ bool GraphicsAlgorithm::SortActiveEdges(const ScanData first, const ScanData sec
     return first.xVal < second.xVal;
 }
 
-void GraphicsAlgorithm::DrawScanLine(int curY, list<ScanData> activeEdges, bool drawGreen)
+void GraphicsAlgorithm::DrawScanLine(int curY, list<ScanData> activeEdges, int subWindow, bool drawGreen)
 {
     Color color = Color(1,1,1);
     if(drawGreen)
@@ -284,7 +284,7 @@ void GraphicsAlgorithm::DrawScanLine(int curY, list<ScanData> activeEdges, bool 
             if(!parity)
             {
                 Point p = Point(curX, curY, color);
-                Renderer::Instance()->DrawPoint(p);
+                Renderer::Instance()->DrawPoint(p, subWindow);
             }
             
             curIntersections++;
@@ -295,7 +295,7 @@ void GraphicsAlgorithm::DrawScanLine(int curY, list<ScanData> activeEdges, bool 
             if(!parity)
             {
                 Point p = Point(curX, curY, color);
-                Renderer::Instance()->DrawPoint(p);
+                Renderer::Instance()->DrawPoint(p, subWindow);
             }
         }
         
@@ -494,7 +494,7 @@ void GraphicsAlgorithm::CloseClip(Vector2i minClip, Vector2i maxClip, Vector2i *
  *ALGORITHM IMPLEMENTATION*
  **************************/
 
-void GraphicsAlgorithm::LineDDA(Line line, bool drawGreen)
+void GraphicsAlgorithm::LineDDA(Line line, int subWindow, bool drawGreen)
 {
     Color color = Color(1,1,1);
     if(drawGreen)
@@ -525,7 +525,7 @@ void GraphicsAlgorithm::LineDDA(Line line, bool drawGreen)
     
     //draw first point
     Point p = Point(nearbyint(x), nearbyint(y), color);
-    renderer->DrawPoint(p);
+    renderer->DrawPoint(p, subWindow);
     
     //draw each subsequent point, incrementing along the way
     for(int i = 0; i < steps; i++)
@@ -534,11 +534,11 @@ void GraphicsAlgorithm::LineDDA(Line line, bool drawGreen)
         y += yIncrement;
         
         p = Point(nearbyint(x), nearbyint(y), color);
-        renderer->DrawPoint(p);
+        renderer->DrawPoint(p, subWindow);
     }
 }
 
-void GraphicsAlgorithm::LineBresenham(Line line)
+void GraphicsAlgorithm::LineBresenham(Line line, int subWindow)
 {
     Point a = line.A(), b = line.B();
     //Ensure a -> b goes left to right
@@ -558,20 +558,20 @@ void GraphicsAlgorithm::LineBresenham(Line line)
     {
         case 1:
             //horizontal, vertical, or m = 1
-            LineDDA(line);
+            LineDDA(line, subWindow);
             break;
         case 2:
             //m > 0
-            HandlePositiveSlope(a, b, dx, dy);
+            HandlePositiveSlope(a, b, dx, dy, subWindow);
             break;
         case 3:
             //m < 0
-            HandleNegativeSlope(a, b, dx, dy);
+            HandleNegativeSlope(a, b, dx, dy, subWindow);
             break;
     }
 }
 
-void GraphicsAlgorithm::PolyScanLine(deque<Line> edges, bool drawGreen)
+void GraphicsAlgorithm::PolyScanLine(deque<Line> edges, int subWindow, bool drawGreen)
 {
     list<ScanData> remainingEdges;
     list<ScanData> activeEdges;
@@ -601,7 +601,7 @@ void GraphicsAlgorithm::PolyScanLine(deque<Line> edges, bool drawGreen)
         activeEdges.sort(SortActiveEdges);
         
         //Draw Scan Line
-        DrawScanLine(curY, activeEdges, drawGreen);
+        DrawScanLine(curY, activeEdges, subWindow, drawGreen);
         
         //increment Y
         curY++;

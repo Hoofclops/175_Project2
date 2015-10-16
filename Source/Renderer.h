@@ -32,6 +32,8 @@ class Renderer
 {
 public:
     
+    static int sMainWindow, sSubWindow1, sSubWindow2, sSubWindow3;
+    
     enum Algo
     {
         DDA,
@@ -57,20 +59,27 @@ public:
     Vector2i GetScreenSize();
     void SetScreenSize(Vector2i size);
     
-    void DrawPoint(Point point);
-    void DrawLine(Line line, Algo algo);
-    void DrawPolygon(Polygon poly, ProjectionPlane plane);
+    void DrawPoint(Point point, int subWindow);
+    void DrawLine(Line line, Algo algo, int subWindow);
+    void DrawPolygon(Polygon poly);
     
     void ClearBuffer();
     
     static void DisplayPixelBuffer();
+    static void DisplayPixelBuffer1();
+    static void DisplayPixelBuffer2();
+    static void DisplayPixelBuffer3();
 
-    void DrawScene(ProjectionPlane plane);
+    void DrawScene();
     
 private:
     static Renderer* sInstance;
     static Vector2i  sScreenSize;
-    static float*  sPixelBuffer;
+    static Vector2i sSubwindowSize;
+    static float* sPixelBuffer;
+    static float* sPixelBuffer1;
+    static float* sPixelBuffer2;
+    static float* sPixelBuffer3;
     
     Renderer();
     

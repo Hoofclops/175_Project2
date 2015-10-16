@@ -40,8 +40,7 @@ void InputOutputUtility::DetectInput(unsigned char key, int xmouse, int ymouse)
             break;
     }
     
-    Renderer::Instance()->DrawScene(Renderer::XY);
-    glutPostRedisplay();
+    Renderer::Instance()->DrawScene();
 }
 
 void InputOutputUtility::ProcessInput()

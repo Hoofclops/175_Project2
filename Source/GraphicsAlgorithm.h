@@ -28,8 +28,8 @@ class GraphicsAlgorithm
 private:
     //Bresenham helpers
     static int DetermineCase(float dy, float dx);
-    static void HandlePositiveSlope(Point a, Point b, int dx, int dy);
-    static void HandleNegativeSlope(Point a, Point b, int dx, int dy);
+    static void HandlePositiveSlope(Point a, Point b, int dx, int dy, int subWindow);
+    static void HandleNegativeSlope(Point a, Point b, int dx, int dy, int subWindow);
     
     //Scan line helpers
     struct ScanData
@@ -52,7 +52,7 @@ private:
     static bool InitScanLineValues(Line line, ScanData* data);
     static void FillRemainingEdges(deque<Line> edges, list<ScanData> * remainingEdges);
     static bool SortActiveEdges(const ScanData first, const ScanData second);
-    static void DrawScanLine(int curY, list<ScanData> activeEdges, bool drawGreen);
+    static void DrawScanLine(int curY, list<ScanData> activeEdges, int subWindow, bool drawGreen);
     
     //Cohen-Sutherland
     static GLint Inside(GLint code);
@@ -71,9 +71,9 @@ private:
     static void CloseClip(Vector2i minClip, Vector2i maxClip, Vector2i *pOut, GLint *cnt, deque<Vector2i> *first, Vector2i *s);
 
 public:
-    static void LineDDA(Line line, bool drawGreen = false);
-    static void LineBresenham(Line line);
-    static void PolyScanLine(deque<Line> edges, bool drawGreen = false);
+    static void LineDDA(Line line, int subWindow, bool drawGreen = false);
+    static void LineBresenham(Line line, int subWindow);
+    static void PolyScanLine(deque<Line> edges, int subWindow, bool drawGreen = false);
     static Vector2i FindPolyCentroid(Polygon poly);
     static void LineClipCohenSutherland(Vector2i minClip, Vector2i maxClip, Line *line);
     static int PolygonClipSutherlandHodgman(Vector2i minClip, Vector2i maxClip, Polygon poly, Vector2i *pOut);

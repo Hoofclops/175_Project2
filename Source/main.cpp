@@ -15,23 +15,37 @@
 #include "ObjectEditor.h"
 #include "InputOutputUtility.h"
 
-float *PixelBuffer;
-
 int main(int argc, char *argv[])
 {    
     Renderer::Instance()->InitWindow(800, 800);
+    Vector2i screenSize = Renderer::Instance()->GetScreenSize();
     
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
-    Vector2i screenSize = Renderer::Instance()->GetScreenSize();
     glutInitWindowSize(screenSize.mX, screenSize.mY);
     glutInitWindowPosition(100, 100);
     
-    glutCreateWindow("Project 2");
-    glClearColor(0, 0, 0, 0); //clears the buffer of OpenGL
+    Renderer::sMainWindow = glutCreateWindow("Project 2");
     glutDisplayFunc(Renderer::DisplayPixelBuffer);
     glutKeyboardFunc(InputOutputUtility::DetectInput);
     
+    //bottom left
+    Renderer::sSubWindow1 = glutCreateSubWindow(Renderer::sMainWindow, 0, screenSize.mY/2, screenSize.mX/2, screenSize.mY/2);
+    glutDisplayFunc(Renderer::DisplayPixelBuffer1);
+    glutKeyboardFunc(InputOutputUtility::DetectInput);
+    
+    //bottom right
+    Renderer::sSubWindow2 = glutCreateSubWindow(Renderer::sMainWindow, screenSize.mX/2, screenSize.mY/2, screenSize.mX/2, screenSize.mY/2);
+    glutDisplayFunc(Renderer::DisplayPixelBuffer2);
+    glutKeyboardFunc(InputOutputUtility::DetectInput);
+    
+    //top left
+    Renderer::sSubWindow3 = glutCreateSubWindow(Renderer::sMainWindow, 0, 0, screenSize.mX/2, screenSize.mY/2);
+    glutDisplayFunc(Renderer::DisplayPixelBuffer3);
+    glutKeyboardFunc(InputOutputUtility::DetectInput);
+    
+    glClearColor(0, 0, 0, 0);
+
     glutMainLoop();//main display loop, will display until terminate
     
     return 0;

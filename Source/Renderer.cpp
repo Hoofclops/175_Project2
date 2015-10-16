@@ -10,7 +10,15 @@
 
 Renderer* Renderer::sInstance;
 Vector2i Renderer::sScreenSize;
+Vector2i Renderer::sSubwindowSize;
 float*  Renderer::sPixelBuffer;
+float*  Renderer::sPixelBuffer1;
+float*  Renderer::sPixelBuffer2;
+float*  Renderer::sPixelBuffer3;
+int Renderer::sMainWindow;
+int Renderer::sSubWindow1;
+int Renderer::sSubWindow2;
+int Renderer::sSubWindow3;
 
 Renderer::Renderer()
 {}
@@ -18,7 +26,26 @@ Renderer::Renderer()
 void Renderer::InitWindow(int xDim, int yDim)
 {
     sScreenSize = Vector2i(xDim, yDim);
-    sPixelBuffer = new float[sScreenSize.mX * sScreenSize.mY * 3]; //Multiply by 3 for rgb, when changing this constant, be sure to change hard code in DrawPoint()
+    sSubwindowSize = Vector2i(xDim/2, yDim/2);
+    int windowPixelCount = (sScreenSize.mX) * (sScreenSize.mY) * 3;
+    int subWindowPixelCount = windowPixelCount / 4;
+    
+    sPixelBuffer = new float[windowPixelCount];
+    sPixelBuffer1 = new float[subWindowPixelCount];
+    sPixelBuffer2 = new float[subWindowPixelCount];
+    sPixelBuffer3 = new float[subWindowPixelCount];
+    
+    for(int i = 0; i < windowPixelCount; i++)
+    {
+        sPixelBuffer[i] = 0.0f;
+        
+        if(i < subWindowPixelCount)
+        {
+            sPixelBuffer1[i] = 0.0f;
+            sPixelBuffer2[i] = 0.0f;
+            sPixelBuffer3[i] = 0.0f;
+        }
+    }
 }
 
 Vector2i Renderer::GetScreenSize()
@@ -31,17 +58,34 @@ void Renderer::SetScreenSize(Vector2i size)
     sScreenSize = size;
 }
 
-void Renderer::DrawPoint(Point point)
+void Renderer::DrawPoint(Point point, int subWindow)
 {
     int pixelStart = PosToIndex((point.Position()));
     
     Color color = point.GetColor();
     
-    if(pixelStart >= 0 && pixelStart + 2 <= sScreenSize.mX * sScreenSize.mY * 3)
+    if(pixelStart >= 0 && pixelStart + 2 <= (sSubwindowSize.mX) * (sSubwindowSize.mY) * 3)
     {
-        sPixelBuffer[pixelStart] = color.GetRed();
-        sPixelBuffer[pixelStart + 1] = color.GetGreen();
-        sPixelBuffer[pixelStart + 2] = color.GetBlue();
+        if(subWindow == sSubWindow1)
+        {
+            sPixelBuffer1[pixelStart] = color.GetRed();
+            sPixelBuffer1[pixelStart + 1] = color.GetGreen();
+            sPixelBuffer1[pixelStart + 2] = color.GetBlue();
+        }
+        else if(subWindow == sSubWindow2)
+        {
+            sPixelBuffer2[pixelStart] = color.GetRed();
+            sPixelBuffer2[pixelStart + 1] = color.GetGreen();
+            sPixelBuffer2[pixelStart + 2] = color.GetBlue();
+
+        }
+        else if(subWindow == sSubWindow3)
+        {
+            sPixelBuffer3[pixelStart] = color.GetRed();
+            sPixelBuffer3[pixelStart + 1] = color.GetGreen();
+            sPixelBuffer3[pixelStart + 2] = color.GetBlue();
+
+        }
     }
     else
     {
@@ -49,66 +93,51 @@ void Renderer::DrawPoint(Point point)
     }
 }
 
-void Renderer::DrawLine(Line line, Algo algo)
+void Renderer::DrawLine(Line line, Algo algo, int subWindow)
 {
     if(algo == DDA)
     {
-        GraphicsAlgorithm::LineDDA(line);
+        GraphicsAlgorithm::LineDDA(line, subWindow);
     }
     else if(algo == BRESENHAM)
     {
-        GraphicsAlgorithm::LineBresenham(line);
+        GraphicsAlgorithm::LineBresenham(line, subWindow);
     }
 }
 
-void Renderer::DrawPolygon(Polygon poly, ProjectionPlane plane)
+void Renderer::DrawPolygon(Polygon poly)
 {
     //If polygon has 2 vertices, use line drawing
     
     //Project vertices
-    deque<Point> vertices;
-    if(plane == XY)
-        vertices = Projector::AxonometricXY(poly.GetVertices());
-    else if(plane == XZ)
-        vertices = Projector::AxonometricXZ(poly.GetVertices());
-    else if(plane == YZ)
-        vertices = Projector::AxonometricYZ(poly.GetVertices());
+    deque<Point> verticesXY = Projector::AxonometricXY(poly.GetVertices());
+    deque<Point> verticesXZ = Projector::AxonometricXZ(poly.GetVertices());
+    deque<Point> verticesYZ = Projector::AxonometricYZ(poly.GetVertices());
+
+    //Normalize and project vertices
+    MapToPlaneQuadrant(&verticesXY, XY);
+    MapToPlaneQuadrant(&verticesXZ, XZ);
+    MapToPlaneQuadrant(&verticesYZ, YZ);
     
-    //Normalize vertices
-    MapToPlaneQuadrant(&vertices, plane);
-    
-    if(vertices.size() == 2)
-    {
-        if(poly.IsSelected())
-            GraphicsAlgorithm::LineDDA(Line(vertices[0], vertices[1]), true);
-        else
-            GraphicsAlgorithm::LineDDA(Line(vertices[0], vertices[1]));
-        return;
-    }
-    
-    deque<Line> edges = VerticesToEdges(vertices);
-    
-//    if(poly.IsSelected())
-//    {
-//        GraphicsAlgorithm::PolyScanLine(edges, true);
-//    }
-//    else
-//    {
-//        GraphicsAlgorithm::PolyScanLine(edges);
-//    }
-//    
-    
-    //draw just the edges to cover top and right edges that weren't drawn by scan line
-    long edgesCount = edges.size();
+    deque<Line> edgesXY = VerticesToEdges(verticesXY);
+    deque<Line> edgesXZ = VerticesToEdges(verticesXZ);
+    deque<Line> edgesYZ = VerticesToEdges(verticesYZ);
+
+    //draw wire frame
+    long edgesCount = edgesXY.size();
     for(int i = 0; i < edgesCount; i++)
     {
         if(poly.IsSelected())
         {
-            GraphicsAlgorithm::LineDDA(edges[i], true);
+            GraphicsAlgorithm::LineDDA(edgesXY[i], Renderer::sSubWindow1, true);
+            GraphicsAlgorithm::LineDDA(edgesXZ[i], Renderer::sSubWindow2, true);
+            GraphicsAlgorithm::LineDDA(edgesYZ[i], Renderer::sSubWindow3, true);
         }
         else
         {
-            GraphicsAlgorithm::LineDDA(edges[i]);
+            GraphicsAlgorithm::LineDDA(edgesXY[i], Renderer::sSubWindow1);
+            GraphicsAlgorithm::LineDDA(edgesXZ[i], Renderer::sSubWindow2);
+            GraphicsAlgorithm::LineDDA(edgesYZ[i], Renderer::sSubWindow3);
         }
     }
 }
@@ -168,29 +197,34 @@ void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane)
     
     //Define quadrant
     Vector2i minQuad, maxQuad;
-    if(plane == XY)
-    {
-        minQuad.mX = 0;
-        minQuad.mY = 0;
-        maxQuad.mX = (sScreenSize.mX / 2) - 1;
-        maxQuad.mY = (sScreenSize.mY / 2) - 1;
-    }
-    else if(plane == XZ)
-    {
-        minQuad.mX = sScreenSize.mX / 2;
-        minQuad.mY = 0;
-        maxQuad.mX = sScreenSize.mX - 1;
-        maxQuad.mY = (sScreenSize.mY / 2) - 1;
+    minQuad.mX = 0;
+    minQuad.mY = 0;
+    maxQuad.mX = sSubwindowSize.mX - 1;
+    maxQuad.mY = sSubwindowSize.mY - 1;
 
-    }
-    else if(plane == YZ)
-    {
-        minQuad.mX = 0;
-        minQuad.mY = sScreenSize.mY / 2;
-        maxQuad.mX = (sScreenSize.mX / 2) - 1;
-        maxQuad.mY = sScreenSize.mY - 1;
-
-    }
+//    if(plane == XY)
+//    {
+//        minQuad.mX = 0;
+//        minQuad.mY = 0;
+//        maxQuad.mX = (sScreenSize.mX / 2) - 1;
+//        maxQuad.mY = (sScreenSize.mY / 2) - 1;
+//    }
+//    else if(plane == XZ)
+//    {
+//        minQuad.mX = sScreenSize.mX / 2;
+//        minQuad.mY = 0;
+//        maxQuad.mX = sScreenSize.mX - 1;
+//        maxQuad.mY = (sScreenSize.mY / 2) - 1;
+//
+//    }
+//    else if(plane == YZ)
+//    {
+//        minQuad.mX = 0;
+//        minQuad.mY = sScreenSize.mY / 2;
+//        maxQuad.mX = (sScreenSize.mX / 2) - 1;
+//        maxQuad.mY = sScreenSize.mY - 1;
+//
+//    }
     
     //Map normalized values to quadrant
     long n = vertices->size();
@@ -208,59 +242,51 @@ void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane)
 
 int Renderer::PosToIndex(Vector2i pos)
 {
-    int width = sScreenSize.mX;
-    
+    int width = sSubwindowSize.mX;
     return (pos.mX + width * pos.mY) * 3;
 }
 
-void Renderer::DrawScene(ProjectionPlane plane)
+void Renderer::DrawScene()
 {
     ClearBuffer();
     
     //Clip lines and polygons
     deque<Line> lines = ObjectEditor::Instance()->GetLines();
     deque<Polygon> polys = ObjectEditor::Instance()->GetPolygons();
-//    ObjectEditor::Instance()->ClipScene(&lines, &polys);
     
     //Draw polygons
     long n = polys.size();
     for(int i = 0; i < n; i++)
     {
-        DrawPolygon(polys[i], plane);
+        DrawPolygon(polys[i]);
     }
     
-    //Draw Lines
-    n = lines.size();
-    for(int i = 0; i < n; i++)
-    {
-        Line l = lines[i];
-        GraphicsAlgorithm::LineDDA(l);
-    }
-    
-//    //Draw Clipping lines
-//    Vector2i minClip = ObjectEditor::Instance()->GetMinClip();
-//    Vector2i maxClip = ObjectEditor::Instance()->GetMaxClip();
-//    if(maxClip.mX < sScreenSize.mX && maxClip.mY < sScreenSize.mY)
-//    {
-//        Line l1 = Line(Point(minClip.mX, minClip.mY), Point(maxClip.mX, minClip.mY));
-//        Line l2 = Line(Point(maxClip.mX, minClip.mY), Point(maxClip.mX, maxClip.mY));
-//        Line l3 = Line(Point(maxClip.mX, maxClip.mY), Point(minClip.mX, maxClip.mY));
-//        Line l4 = Line(Point(minClip.mX, maxClip.mY), Point(minClip.mX, minClip.mY));
-//        GraphicsAlgorithm::LineDDA(l1);
-//        GraphicsAlgorithm::LineDDA(l2);
-//        GraphicsAlgorithm::LineDDA(l3);
-//        GraphicsAlgorithm::LineDDA(l4);
-//    }
+    //Post redisplay for all sub windows
+    glutSetWindow(sMainWindow);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow1);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow2);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow3);
+    glutPostRedisplay();
+
 }
 
 void Renderer::ClearBuffer()
 {
-    //sPixelBuffer = new float[SCREEN_SIZE * SCREEN_SIZE * 3];
-
     int n = sScreenSize.mX * sScreenSize.mY * 3;
+    int m = n / 4;
     for(int i = 0; i < n; i++)
     {
         sPixelBuffer[i] = 0.0f;
+        
+        if(i < m)
+        {
+            sPixelBuffer1[i] = 0.0f;
+            sPixelBuffer2[i] = 0.0f;
+            sPixelBuffer3[i] = 0.0f;
+        }
     }
 }
 
@@ -275,3 +301,37 @@ void Renderer::DisplayPixelBuffer()
     glEnd();
     glFlush();
 }
+void Renderer::DisplayPixelBuffer1()
+{
+    //Misc.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();//load identity matrix
+    
+    //draws pixel on screen, width and height must match pixel buffer dimension
+    glDrawPixels(sSubwindowSize.mX, sSubwindowSize.mY, GL_RGB, GL_FLOAT, sPixelBuffer1);
+    glEnd();
+    glFlush();
+}
+void Renderer::DisplayPixelBuffer2()
+{
+    //Misc.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();//load identity matrix
+    
+    //draws pixel on screen, width and height must match pixel buffer dimension
+    glDrawPixels(sSubwindowSize.mX, sSubwindowSize.mY, GL_RGB, GL_FLOAT, sPixelBuffer2);
+    glEnd();
+    glFlush();
+}
+void Renderer::DisplayPixelBuffer3()
+{
+    //Misc.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();//load identity matrix
+    
+    //draws pixel on screen, width and height must match pixel buffer dimension
+    glDrawPixels(sSubwindowSize.mX, sSubwindowSize.mY, GL_RGB, GL_FLOAT, sPixelBuffer3);
+    glEnd();
+    glFlush();
+}
+

@@ -35,7 +35,7 @@ void Renderer::DrawPoint(Point point)
 {
     int pixelStart = PosToIndex((point.Position()));
     
-    Color color = point.Color();
+    Color color = point.GetColor();
     
     if(pixelStart >= 0 && pixelStart + 2 <= sScreenSize.mX * sScreenSize.mY * 3)
     {
@@ -73,6 +73,9 @@ void Renderer::DrawPolygon(Polygon poly, ProjectionPlane plane)
         vertices = Projector::AxonometricXZ(poly.GetVertices());
     else if(plane == YZ)
         vertices = Projector::AxonometricYZ(poly.GetVertices());
+    
+    //Normalize vertices
+    MapToPlaneQuadrant(&vertices, plane);
     
     if(vertices.size() == 2)
     {
@@ -125,6 +128,82 @@ deque<Line> Renderer::VerticesToEdges(deque<Point> vertices)
     edges.push_back(closingEdge);
 
     return edges;
+}
+
+void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY)
+{
+    //Find min and max points
+    Vector2i min = Vector2i(INT_MAX, INT_MAX), max = Vector2i(0,0);
+    long n = vertices.size();
+    for(int i = 0; i < n; i++)
+    {
+        int x = vertices[i].X(), y = vertices[i].Y();
+        if(x < min.mX)
+            min.mX = x;
+        if(y < min.mY)
+            min.mY = y;
+        if(x > max.mX)
+            max.mX = x;
+        if(y > max.mY)
+            max.mY = y;
+    }
+
+    //Find normalized points
+    for(int i = 0; i < n; i++)
+    {
+        float x = vertices[i].X(), y = vertices[i].Y();
+        
+        x = (float)(x - min.mX) / (float)(max.mX - min.mX);
+        y = (float)(y - min.mY) / (float)(max.mY - min.mY);
+        
+        normX->push_back(x);
+        normY->push_back(y);
+    }
+}
+
+void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane)
+{
+    deque<float> normX, normY;
+    NormalizeVertices(*vertices, &normX, &normY);
+    
+    //Define quadrant
+    Vector2i minQuad, maxQuad;
+    if(plane == XY)
+    {
+        minQuad.mX = 0;
+        minQuad.mY = 0;
+        maxQuad.mX = (sScreenSize.mX / 2) - 1;
+        maxQuad.mY = (sScreenSize.mY / 2) - 1;
+    }
+    else if(plane == XZ)
+    {
+        minQuad.mX = sScreenSize.mX / 2;
+        minQuad.mY = 0;
+        maxQuad.mX = sScreenSize.mX - 1;
+        maxQuad.mY = (sScreenSize.mY / 2) - 1;
+
+    }
+    else if(plane == YZ)
+    {
+        minQuad.mX = 0;
+        minQuad.mY = sScreenSize.mY / 2;
+        maxQuad.mX = (sScreenSize.mX / 2) - 1;
+        maxQuad.mY = sScreenSize.mY - 1;
+
+    }
+    
+    //Map normalized values to quadrant
+    long n = vertices->size();
+    for(int i = 0; i < n; i++)
+    {
+        float zX = normX[i], zY = normY[i];
+        int x, y;
+        
+        x = minQuad.mX + (zX * (maxQuad.mX - minQuad.mX));
+        y = minQuad.mY + (zY * (maxQuad.mY - minQuad.mY));
+        
+        vertices->at(i) = Point(x,y);
+    }
 }
 
 int Renderer::PosToIndex(Vector2i pos)

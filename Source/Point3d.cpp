@@ -14,7 +14,7 @@ Point3d::Point3d(Vector3i pos)
     mPos = pos;
 }
 
-Point3d::Point3d(Vector3i pos, class Color color)
+Point3d::Point3d(Vector3i pos, Color color)
 {
     mPos = pos;
     mColor = color;
@@ -27,7 +27,7 @@ Point3d::Point3d(int x, int y, int z)
     mPos.mZ = z;
 }
 
-Point3d::Point3d(int x, int y, int z, class Color color)
+Point3d::Point3d(int x, int y, int z, Color color)
 {
     mPos.mX = x;
     mPos.mY = y;

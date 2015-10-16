@@ -35,8 +35,8 @@ public:
     int Z(){return mPos.mZ;}
     void Z(int z){mPos.mZ = z;}
     
-    Color Color(){return mColor;}
-    void Color(class Color color){mColor = color;}
+    Color GetColor(){return mColor;}
+    void SetColor( Color color){mColor = color;}
 };
 
 #endif /* Point3d_h */

@@ -14,7 +14,7 @@ Point::Point(Vector2i pos)
     mPos = pos;
 }
 
-Point::Point(Vector2i pos, class Color color)
+Point::Point(Vector2i pos, Color color)
 {
     mPos = pos;
     mColor = color;
@@ -26,7 +26,7 @@ Point::Point(int x, int y)
     mPos.mY = y;
 }
 
-Point::Point(int x, int y, class Color color)
+Point::Point(int x, int y, Color color)
 {
     mPos.mX = x;
     mPos.mY = y;

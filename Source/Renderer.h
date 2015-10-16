@@ -29,18 +29,6 @@
 //Should contain the pixel buffer and handle drawing of points, lines, and polygons
 class Renderer
 {
-private:
-    static Renderer* sInstance;
-    static Vector2i  sScreenSize;
-    static float*  sPixelBuffer;
-    
-    Renderer();
-    
-    //Convert coordinate position to appropriate array index in pixel buffer
-    int PosToIndex(Vector2i pos);
-    
-    deque<Line> VerticesToEdges(deque<Point> vertices);
-    
 public:
     
     enum Algo
@@ -77,6 +65,25 @@ public:
     static void DisplayPixelBuffer();
 
     void DrawScene(ProjectionPlane plane);
+    
+private:
+    static Renderer* sInstance;
+    static Vector2i  sScreenSize;
+    static float*  sPixelBuffer;
+    
+    Renderer();
+    
+    //Convert coordinate position to appropriate array index in pixel buffer
+    int PosToIndex(Vector2i pos);
+    
+    //Build edges from vertices
+    deque<Line> VerticesToEdges(deque<Point> vertices);
+    
+    //Normalize vertices
+    void NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY);
+    
+    void MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane);
+
 };
 
 #endif /* defined(__Project1__Renderer__) */

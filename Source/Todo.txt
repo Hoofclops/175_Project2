@@ -1,7 +1,11 @@
 Todo:
 
-Make polygons use 3d points
-Keep renderer interface using 2d points, normalize 3d points to a 2d point on the screen
+-Split screen into quadrants and all 3 projection planes
+-Change text commands to accomodate new user interaction requirements
+-Set up normalized device coordinates (each quadrant takes up 1/4 pixels of the full screen size)
+-Selection of polygons needs to update across all screens
+-Modify draw scene to draw to all quadrants
+-Set up transformations
 
 
 Code removed:

@@ -19,7 +19,7 @@ float *PixelBuffer;
 
 int main(int argc, char *argv[])
 {    
-    Renderer::Instance()->InitWindow(500 + 1, 500 + 1);
+    Renderer::Instance()->InitWindow(800, 800);
     
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);

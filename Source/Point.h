@@ -33,8 +33,8 @@ public:
     void X(int x){mPos.mX = x;}
     int Y(){return mPos.mY;}
     void Y(int y){mPos.mY = y;}
-    Color Color(){return mColor;}
-    void Color(class Color color){mColor = color;}
+    Color GetColor(){return mColor;}
+    void SetColor(Color color){mColor = color;}
 };
 
 #endif /* defined(__Project1__Point__) */

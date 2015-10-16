@@ -18,6 +18,7 @@
  #include <GLUT/glut.h>
 //#include <GL/glut.h>
 #include <iostream>
+#include <limits>
 #include "Vector2i.h"
 #include "Color.h"
 #include "Polygon.h"

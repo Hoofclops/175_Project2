@@ -133,7 +133,7 @@ deque<Line> Renderer::VerticesToEdges(deque<Point> vertices)
 void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY)
 {
     //Find min and max points
-    Vector2i min = Vector2i(INT_MAX, INT_MAX), max = Vector2i(0,0);
+    Vector2i min = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max()), max = Vector2i(0,0);
     long n = vertices.size();
     for(int i = 0; i < n; i++)
     {

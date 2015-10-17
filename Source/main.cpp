@@ -17,8 +17,8 @@
 
 int main(int argc, char *argv[])
 {    
-    Renderer::Instance()->InitWindow(800, 800);
-    Vector2i screenSize = Renderer::Instance()->GetScreenSize();
+    Renderer::Instance()->InitWindow(600, 600);
+    Vector2i screenSize = Renderer::Instance()->ScreenSize();
     
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);

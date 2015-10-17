@@ -14,26 +14,31 @@
 #include <stdexcept>
 #include <iostream>
 #include "Point3d.h"
+#include "Point.h"
+#include "Line.h"
 #include "Line3d.h"
 #include "Vector3i.h"
+#include "Vector2i.h"
 
 class Polygon
 {
 private:
     //deque to maintain stable references between edges and vertices
     deque<Point3d> mVertices;
-    deque<Line3d> mEdges;
+    deque<Vector2i> mEdgeConnections;
     bool mSelected;
     
 public:
     Polygon();
-    Polygon(deque<Vector3i> vertPositions);
+    Polygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections);
     
     deque<Point3d> GetVertices();
     void SetVertex(int index, Vector3i pos);
     void SetVertices(deque<Point3d> verts);
 
     deque<Line3d> GetEdges();
+    deque<Line> GetEdges2d(deque<Point> vertices);
+    deque<Vector2i> GetEdgeConnections(){return mEdgeConnections;}
     
     void SetSelected(bool isSelected);
     bool IsSelected();

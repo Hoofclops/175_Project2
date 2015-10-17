@@ -35,7 +35,7 @@ public:
         return sInstance;
     }
     
-    void CreatePolygon(deque<Vector3i> vertPositions);
+    void CreatePolygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections);
     void CreateLine(Line line);
     
     void TranslatePolygon(Vector2i translationVector);
@@ -52,7 +52,4 @@ public:
     void ClipScene(deque<Line> *clippedLines, deque<Polygon> *clippedPolys);
     void SetClip(Vector2i minClip, Vector2i maxClip);
 };
-
-
-
 #endif /* defined(__Project1__ObjectEditor__) */

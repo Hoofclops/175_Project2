@@ -17,7 +17,6 @@
  #include <OpenGL/glu.h>
  #include <GLUT/glut.h>
 //#include <GL/glut.h>
-#include <iostream>
 #include <limits>
 #include "Vector2i.h"
 #include "Color.h"
@@ -56,21 +55,19 @@ public:
     
     void InitWindow(int xDim, int yDim);
     
-    Vector2i GetScreenSize();
-    void SetScreenSize(Vector2i size);
+    Vector2i ScreenSize(){return sScreenSize;};
+    void ScreenSize(Vector2i size){sScreenSize = size;}
     
-    void DrawPoint(Point point, int subWindow);
+    void DrawScene();
     void DrawLine(Line line, Algo algo, int subWindow);
-    void DrawPolygon(Polygon poly);
-    
-    void ClearBuffer();
-    
+    void DrawPoint(Point point, int subWindow);
+
     static void DisplayPixelBuffer();
     static void DisplayPixelBuffer1();
     static void DisplayPixelBuffer2();
     static void DisplayPixelBuffer3();
-
-    void DrawScene();
+    
+    void ClearBuffer();
     
 private:
     static Renderer* sInstance;
@@ -86,14 +83,9 @@ private:
     //Convert coordinate position to appropriate array index in pixel buffer
     int PosToIndex(Vector2i pos);
     
-    //Build edges from vertices
-    deque<Line> VerticesToEdges(deque<Point> vertices);
-    
-    //Normalize vertices
-    void NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY);
-    
-    void MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane);
-
+    void DrawPolygons();
+    void MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, Vector2i minPoint, Vector2i maxPoint);
+    void NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, Vector2i minPoint, Vector2i maxPoint);
 };
 
 #endif /* defined(__Project1__Renderer__) */

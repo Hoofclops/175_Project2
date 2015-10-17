@@ -3,7 +3,35 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "GraphicsAlgorithm::ClipPoint(Vector2i, GraphicsAlgorithm::Boundary, Vector2i, Vector2i, Vector2i*, int*, Vector2i**, Vector2i*):GraphicsAlgorithm.cpp">
+         contextName = "GraphicsAlgorithm::LineDDA(Line, int, bool):GraphicsAlgorithm.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "GraphicsAlgorithm::FillRemainingEdges(std::__1::deque&lt;Line, std::__1::allocator&lt;Line&gt; &gt;, std::__1::list&lt;GraphicsAlgorithm::ScanData, std::__1::allocator&lt;GraphicsAlgorithm::ScanData&gt; &gt;*):GraphicsAlgorithm.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Renderer::NormalizeVertices(std::__1::deque&lt;Point, std::__1::allocator&lt;Point&gt; &gt;, std::__1::deque&lt;float, std::__1::allocator&lt;float&gt; &gt;*, std::__1::deque&lt;float, std::__1::allocator&lt;float&gt; &gt;*, Vector2i, Vector2i):Renderer.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Renderer::DrawLine(Line, Renderer::Algo):Renderer.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Renderer::DrawPolygon(Polygon):Renderer.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "GraphicsAlgorithm::LineClipCohenSutherland(Vector2i, Vector2i, Line*):GraphicsAlgorithm.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Polygon::GetEdges():Polygon.cpp">
       </ContextState>
       <ContextState
          contextName = "Polygon::Polygon(std::__1::vector&lt;Vector2i, std::__1::allocator&lt;Vector2i&gt; &gt;):Polygon.cpp">
@@ -17,6 +45,34 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "Renderer::DrawPolygons():Renderer.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "j">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ObjectManager::CreatePolygon(std::__1::vector&lt;Vector2i, std::__1::allocator&lt;Vector2i&gt; &gt;):ObjectManager.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Line::Line(Point*, Point*):Line.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Renderer::MapToPlaneQuadrant(std::__1::deque&lt;Point, std::__1::allocator&lt;Point&gt; &gt;*, Renderer::ProjectionPlane, Vector2i, Vector2i):Renderer.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "plane">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphicsAlgorithm::PolygonClipSutherlandHodgman(Vector2i, Vector2i, Polygon, Vector2i*):GraphicsAlgorithm.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "GraphicsAlgorithm::InitScanLineValues(Line, GraphicsAlgorithm::ScanData*):GraphicsAlgorithm.cpp">
+      </ContextState>
+      <ContextState
          contextName = "GraphicsAlgorithm::Intersect(Vector2i, Vector2i, GraphicsAlgorithm::Boundary, Vector2i, Vector2i):GraphicsAlgorithm.cpp">
          <PersistentStrings>
             <PersistentString
@@ -25,44 +81,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "Renderer::DrawLine(Line, Renderer::Algo):Renderer.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "Renderer::DrawPoint(Point):Renderer.cpp">
-         <PersistentStrings>
-            <PersistentString
-               value = "point">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "Polygon::GetEdges():Polygon.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "GraphicsAlgorithm::InitScanLineValues(Line, GraphicsAlgorithm::ScanData*):GraphicsAlgorithm.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "GraphicsAlgorithm::DrawScanLine(int, std::__1::list&lt;GraphicsAlgorithm::ScanData, std::__1::allocator&lt;GraphicsAlgorithm::ScanData&gt; &gt;):GraphicsAlgorithm.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "Renderer::DrawPolygon(Polygon):Renderer.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "GraphicsAlgorithm::PolygonClipSutherlandHodgman(Vector2i, Vector2i, Polygon, Vector2i*):GraphicsAlgorithm.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "GraphicsAlgorithm::LineClipCohenSutherland(Vector2i, Vector2i, Line*):GraphicsAlgorithm.cpp">
-      </ContextState>
-      <ContextState
-         contextName = "GraphicsAlgorithm::FillRemainingEdges(std::__1::deque&lt;Line, std::__1::allocator&lt;Line&gt; &gt;, std::__1::list&lt;GraphicsAlgorithm::ScanData, std::__1::allocator&lt;GraphicsAlgorithm::ScanData&gt; &gt;*):GraphicsAlgorithm.cpp">
-         <PersistentStrings>
-            <PersistentString
-               value = "i">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ObjectManager::CreatePolygon(std::__1::vector&lt;Vector2i, std::__1::allocator&lt;Vector2i&gt; &gt;):ObjectManager.cpp">
+         contextName = "GraphicsAlgorithm::ClipPoint(Vector2i, GraphicsAlgorithm::Boundary, Vector2i, Vector2i, Vector2i*, int*, Vector2i**, Vector2i*):GraphicsAlgorithm.cpp">
       </ContextState>
       <ContextState
          contextName = "GraphicsAlgorithm::InitScanLineValues(Line, float*):GraphicsAlgorithm.cpp">
@@ -71,13 +90,13 @@
                value = "yMax">
             </PersistentString>
             <PersistentString
-               value = "inverseSlope">
+               value = "yMin">
             </PersistentString>
             <PersistentString
                value = "xVal">
             </PersistentString>
             <PersistentString
-               value = "yMin">
+               value = "inverseSlope">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -102,7 +121,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "Line::Line(Point*, Point*):Line.cpp">
+         contextName = "Renderer::DrawPoint(Point):Renderer.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "point">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphicsAlgorithm::DrawScanLine(int, std::__1::list&lt;GraphicsAlgorithm::ScanData, std::__1::allocator&lt;GraphicsAlgorithm::ScanData&gt; &gt;):GraphicsAlgorithm.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Renderer::DrawScene():Renderer.cpp">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

@@ -80,10 +80,6 @@ void InputOutputUtility::ProcessInput()
     {
         ProcessCommandRotate(tokens);
     }
-//    else if(command == "Clip" || command == "clip")
-//    {
-//        ProcessCommandClip(tokens);
-//    }
     else if(command == "Load" || command == "load")
     {
         ProcessCommandLoadFile(tokens);
@@ -106,14 +102,14 @@ void InputOutputUtility::ProcessInput()
 
 void InputOutputUtility::ProcessCommandPolygon(deque<string> tokens)
 {
-    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
-    
-    if(vertexPositions.size() == 0)
-    {
-        cout << "Invalid command" << endl;
-        return;
-    }
-    ObjectEditor::Instance()->CreatePolygon(vertexPositions);
+//    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
+//    
+//    if(vertexPositions.size() == 0)
+//    {
+//        cout << "Invalid command" << endl;
+//        return;
+//    }
+//    ObjectEditor::Instance()->CreatePolygon(vertexPositions);
 }
 
 void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
@@ -206,6 +202,7 @@ void InputOutputUtility::ProcessCommandSaveFile(deque<string> tokens)
 
 void InputOutputUtility::ParsePolygonFile(string fileName)
 {
+    bool parsingEdges = false;
     ifstream fin;
 //   fin.open(fileName);
      fin.open("//Users//BrandonHome//GitHub//175_Project2//DataFiles//" + fileName);
@@ -214,6 +211,7 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
     
     const char* tokens[MAX_TOKENS] = {}; // initialize to 0
     deque<Vector3i> vertexPositions;
+    deque<Vector2i> edgeConnections;
     
     while (!fin.eof())
     {
@@ -240,25 +238,27 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
         //Parse strings
         if(strcmp(tokens[0], "End") == 0 || strcmp(tokens[0], "end") == 0)
         {
-//            if(vertexPositions.size() == 2)
-//            {
-//                Line l = Line(Point(vertexPositions[0].mX, vertexPositions[0].mY),
-//                              Point(vertexPositions[1].mX, vertexPositions[1].mY));
-//                ObjectEditor::Instance()->CreateLine(l);
-//            }
-//            else
-//            {
-                ObjectEditor::Instance()->CreatePolygon(vertexPositions);
-//            }
-            
+            ObjectEditor::Instance()->CreatePolygon(vertexPositions, edgeConnections);
             vertexPositions.clear();
+            edgeConnections.clear();
+            parsingEdges = false;
         }
-        else
+        else if(strcmp(tokens[0], "Edges") == 0 || strcmp(tokens[0], "edges") == 0)
+        {
+            parsingEdges = true;
+        }
+        else if(!parsingEdges)
         {
             int x = atoi(tokens[0]);
             int y = atoi(tokens[1]);
             int z = atoi(tokens[2]);
             vertexPositions.push_back(Vector3i(x, y, z));
+        }
+        else
+        {
+            int index1 = atoi(tokens[0]) - 1;
+            int index2 = atoi(tokens[1]) - 1;
+            edgeConnections.push_back(Vector2i(index1, index2));
         }
     }
     
@@ -272,28 +272,30 @@ void InputOutputUtility::SavePolygonFile(string fileName)
     fout.open("//Users//BrandonHome//GitHub//175_Project2//DataFiles//" + fileName, ofstream::out | ofstream::trunc);
     
     deque<Polygon> allPolys = ObjectEditor::Instance()->GetPolygons();
-//    deque<Line3d> allLines = ObjectEditor::Instance()->GetLines();
     
     long polyCount = allPolys.size();
     for(unsigned int i = 0; i < polyCount; i++)
     {
         deque<Point3d> vertices = allPolys[i].GetVertices();
+        deque<Vector2i> edges = allPolys[i].GetEdgeConnections();
         
+        //store vertices
         long vertexCount = vertices.size();
         for(unsigned int j = 0; j < vertexCount; j++)
         {
             fout << vertices[j].X() << "," << vertices[j].Y() << "," << vertices[j].Z() << "\n";
         }
+        
+        //store edge connections
+        fout << "Edges";
+        long edgeCount = edges.size();
+        for(unsigned int j = 0; j < edgeCount; j++)
+        {
+            fout << edges[j].mX << "," << edges[j].mY << "\n";
+        }
+        
         fout << "End" << "\n" << "\n";
     }
-    
-//    long lineCount = allLines.size();
-//    for(unsigned int i = 0; i < lineCount; i++)
-//    {
-//        fout << allLines[i].A().X() << "," << allLines[i].A().Y()<< "\n";
-//        fout << allLines[i].B().X() << "," << allLines[i].B().Y()<< "\n";
-//        fout << "End" << "\n" << "\n";
-//    }
     
     fout.close();
 }

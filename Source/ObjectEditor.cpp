@@ -19,13 +19,13 @@ ObjectEditor::ObjectEditor()
 {
     sSelectedPoly = -1;
     sMinClip = Vector2i(0,0);
-    Vector2i screenSize = Renderer::Instance()->GetScreenSize();
+    Vector2i screenSize = Renderer::Instance()->ScreenSize();
     sMaxClip = Vector2i(screenSize.mX, screenSize.mY);
 }
 
-void ObjectEditor::CreatePolygon(deque<Vector3i> vertPositions)
+void ObjectEditor::CreatePolygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections)
 {
-    Polygon poly = Polygon(vertPositions);
+    Polygon poly = Polygon(vertPositions, edgeConnections);
     sPolyList.push_back(poly);
 }
 

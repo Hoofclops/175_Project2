@@ -8,6 +8,11 @@
 
 #include "Renderer.h"
 
+
+/****************************
+ *STATIC VARIABLE DECLARATIONS*
+ ****************************/
+
 Renderer* Renderer::sInstance;
 Vector2i Renderer::sScreenSize;
 Vector2i Renderer::sSubwindowSize;
@@ -22,6 +27,10 @@ int Renderer::sSubWindow3;
 
 Renderer::Renderer()
 {}
+
+/****************************
+ *PUBLIC FUNCTIONS*
+ ****************************/
 
 void Renderer::InitWindow(int xDim, int yDim)
 {
@@ -48,14 +57,33 @@ void Renderer::InitWindow(int xDim, int yDim)
     }
 }
 
-Vector2i Renderer::GetScreenSize()
+void Renderer::DrawScene()
 {
-    return sScreenSize;
+    ClearBuffer();
+    
+    DrawPolygons();
+    
+    //Post redisplay for all sub windows
+    glutSetWindow(sMainWindow);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow1);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow2);
+    glutPostRedisplay();
+    glutSetWindow(sSubWindow3);
+    glutPostRedisplay();
 }
 
-void Renderer::SetScreenSize(Vector2i size)
+void Renderer::DrawLine(Line line, Algo algo, int subWindow)
 {
-    sScreenSize = size;
+    if(algo == DDA)
+    {
+        GraphicsAlgorithm::LineDDA(line, subWindow);
+    }
+    else if(algo == BRESENHAM)
+    {
+        GraphicsAlgorithm::LineBresenham(line, subWindow);
+    }
 }
 
 void Renderer::DrawPoint(Point point, int subWindow)
@@ -90,203 +118,6 @@ void Renderer::DrawPoint(Point point, int subWindow)
     else
     {
         throw out_of_range("Point outside of pixel buffer range");
-    }
-}
-
-void Renderer::DrawLine(Line line, Algo algo, int subWindow)
-{
-    if(algo == DDA)
-    {
-        GraphicsAlgorithm::LineDDA(line, subWindow);
-    }
-    else if(algo == BRESENHAM)
-    {
-        GraphicsAlgorithm::LineBresenham(line, subWindow);
-    }
-}
-
-void Renderer::DrawPolygon(Polygon poly)
-{
-    //If polygon has 2 vertices, use line drawing
-    
-    //Project vertices
-    deque<Point> verticesXY = Projector::AxonometricXY(poly.GetVertices());
-    deque<Point> verticesXZ = Projector::AxonometricXZ(poly.GetVertices());
-    deque<Point> verticesYZ = Projector::AxonometricYZ(poly.GetVertices());
-
-    //Normalize and project vertices
-    MapToPlaneQuadrant(&verticesXY, XY);
-    MapToPlaneQuadrant(&verticesXZ, XZ);
-    MapToPlaneQuadrant(&verticesYZ, YZ);
-    
-    deque<Line> edgesXY = VerticesToEdges(verticesXY);
-    deque<Line> edgesXZ = VerticesToEdges(verticesXZ);
-    deque<Line> edgesYZ = VerticesToEdges(verticesYZ);
-
-    //draw wire frame
-    long edgesCount = edgesXY.size();
-    for(int i = 0; i < edgesCount; i++)
-    {
-        if(poly.IsSelected())
-        {
-            GraphicsAlgorithm::LineDDA(edgesXY[i], Renderer::sSubWindow1, true);
-            GraphicsAlgorithm::LineDDA(edgesXZ[i], Renderer::sSubWindow2, true);
-            GraphicsAlgorithm::LineDDA(edgesYZ[i], Renderer::sSubWindow3, true);
-        }
-        else
-        {
-            GraphicsAlgorithm::LineDDA(edgesXY[i], Renderer::sSubWindow1);
-            GraphicsAlgorithm::LineDDA(edgesXZ[i], Renderer::sSubWindow2);
-            GraphicsAlgorithm::LineDDA(edgesYZ[i], Renderer::sSubWindow3);
-        }
-    }
-}
-
-deque<Line> Renderer::VerticesToEdges(deque<Point> vertices)
-{
-    deque<Line> edges;
-    
-    long n = vertices.size();
-    for(int i = 1; i < n; i++)
-    {
-        Line l = Line(vertices[i - 1], vertices[i]);
-        edges.push_back(l);
-    }
-    
-    Line closingEdge = Line(vertices[n - 1], vertices[0]);
-    edges.push_back(closingEdge);
-
-    return edges;
-}
-
-void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY)
-{
-    //Find min and max points
-    Vector2i min = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max()), max = Vector2i(0,0);
-    long n = vertices.size();
-    for(int i = 0; i < n; i++)
-    {
-        int x = vertices[i].X(), y = vertices[i].Y();
-        if(x < min.mX)
-            min.mX = x;
-        if(y < min.mY)
-            min.mY = y;
-        if(x > max.mX)
-            max.mX = x;
-        if(y > max.mY)
-            max.mY = y;
-    }
-
-    //Find normalized points
-    for(int i = 0; i < n; i++)
-    {
-        float x = vertices[i].X(), y = vertices[i].Y();
-        
-        x = (float)(x - min.mX) / (float)(max.mX - min.mX);
-        y = (float)(y - min.mY) / (float)(max.mY - min.mY);
-        
-        normX->push_back(x);
-        normY->push_back(y);
-    }
-}
-
-void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane)
-{
-    deque<float> normX, normY;
-    NormalizeVertices(*vertices, &normX, &normY);
-    
-    //Define quadrant
-    Vector2i minQuad, maxQuad;
-    minQuad.mX = 0;
-    minQuad.mY = 0;
-    maxQuad.mX = sSubwindowSize.mX - 1;
-    maxQuad.mY = sSubwindowSize.mY - 1;
-
-//    if(plane == XY)
-//    {
-//        minQuad.mX = 0;
-//        minQuad.mY = 0;
-//        maxQuad.mX = (sScreenSize.mX / 2) - 1;
-//        maxQuad.mY = (sScreenSize.mY / 2) - 1;
-//    }
-//    else if(plane == XZ)
-//    {
-//        minQuad.mX = sScreenSize.mX / 2;
-//        minQuad.mY = 0;
-//        maxQuad.mX = sScreenSize.mX - 1;
-//        maxQuad.mY = (sScreenSize.mY / 2) - 1;
-//
-//    }
-//    else if(plane == YZ)
-//    {
-//        minQuad.mX = 0;
-//        minQuad.mY = sScreenSize.mY / 2;
-//        maxQuad.mX = (sScreenSize.mX / 2) - 1;
-//        maxQuad.mY = sScreenSize.mY - 1;
-//
-//    }
-    
-    //Map normalized values to quadrant
-    long n = vertices->size();
-    for(int i = 0; i < n; i++)
-    {
-        float zX = normX[i], zY = normY[i];
-        int x, y;
-        
-        x = minQuad.mX + (zX * (maxQuad.mX - minQuad.mX));
-        y = minQuad.mY + (zY * (maxQuad.mY - minQuad.mY));
-        
-        vertices->at(i) = Point(x,y);
-    }
-}
-
-int Renderer::PosToIndex(Vector2i pos)
-{
-    int width = sSubwindowSize.mX;
-    return (pos.mX + width * pos.mY) * 3;
-}
-
-void Renderer::DrawScene()
-{
-    ClearBuffer();
-    
-    //Clip lines and polygons
-    deque<Line> lines = ObjectEditor::Instance()->GetLines();
-    deque<Polygon> polys = ObjectEditor::Instance()->GetPolygons();
-    
-    //Draw polygons
-    long n = polys.size();
-    for(int i = 0; i < n; i++)
-    {
-        DrawPolygon(polys[i]);
-    }
-    
-    //Post redisplay for all sub windows
-    glutSetWindow(sMainWindow);
-    glutPostRedisplay();
-    glutSetWindow(sSubWindow1);
-    glutPostRedisplay();
-    glutSetWindow(sSubWindow2);
-    glutPostRedisplay();
-    glutSetWindow(sSubWindow3);
-    glutPostRedisplay();
-
-}
-
-void Renderer::ClearBuffer()
-{
-    int n = sScreenSize.mX * sScreenSize.mY * 3;
-    int m = n / 4;
-    for(int i = 0; i < n; i++)
-    {
-        sPixelBuffer[i] = 0.0f;
-        
-        if(i < m)
-        {
-            sPixelBuffer1[i] = 0.0f;
-            sPixelBuffer2[i] = 0.0f;
-            sPixelBuffer3[i] = 0.0f;
-        }
     }
 }
 
@@ -333,5 +164,173 @@ void Renderer::DisplayPixelBuffer3()
     glDrawPixels(sSubwindowSize.mX, sSubwindowSize.mY, GL_RGB, GL_FLOAT, sPixelBuffer3);
     glEnd();
     glFlush();
+}
+
+void Renderer::ClearBuffer()
+{
+    int n = sScreenSize.mX * sScreenSize.mY * 3;
+    int m = n / 4;
+    for(int i = 0; i < n; i++)
+    {
+        sPixelBuffer[i] = 0.0f;
+        
+        if(i < m)
+        {
+            sPixelBuffer1[i] = 0.0f;
+            sPixelBuffer2[i] = 0.0f;
+            sPixelBuffer3[i] = 0.0f;
+        }
+    }
+}
+
+/****************************
+ *PRIVATE FUNCTIONS*
+ ****************************/
+
+int Renderer::PosToIndex(Vector2i pos)
+{
+    int width = sSubwindowSize.mX;
+    return (pos.mX + width * pos.mY) * 3;
+}
+
+void Renderer::DrawPolygons()
+{
+    deque<Polygon> polys = ObjectEditor::Instance()->GetPolygons();
+    deque<deque<Point>> verticesXY, verticesXZ, verticesYZ;
+    
+    //Project all vertices
+    long polyCount = polys.size();
+    for(int i = 0; i < polyCount; i++)
+    {
+        verticesXY.push_back(Projector::AxonometricXY(polys[i].GetVertices()));
+        verticesXZ.push_back(Projector::AxonometricXZ(polys[i].GetVertices()));
+        verticesYZ.push_back(Projector::AxonometricYZ(polys[i].GetVertices()));
+    }
+    
+    //Find min and max points for each plane
+    Vector2i minXY = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
+    Vector2i minXZ = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
+    Vector2i minYZ = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
+    Vector2i maxXY = Vector2i(0,0);
+    Vector2i maxXZ = Vector2i(0,0);
+    Vector2i maxYZ = Vector2i(0,0);
+    for(int i = 0; i < polyCount; i++)
+    {
+        long m = verticesXY[i].size();
+        for(int j = 0; j < m; j++)
+        {
+            //XY
+            int x = verticesXY[i][j].X(), y = verticesXY[i][j].Y();
+            if(x < minXY.mX)
+                minXY.mX = x;
+            if(y < minXY.mY)
+                minXY.mY = y;
+            if(x > maxXY.mX)
+                maxXY.mX = x;
+            if(y > maxXY.mY)
+                maxXY.mY = y;
+            
+            //XZ
+            x = verticesXZ[i][j].X(); y = verticesXZ[i][j].Y();
+            if(x < minXZ.mX)
+                minXZ.mX = x;
+            if(y < minXZ.mY)
+                minXZ.mY = y;
+            if(x > maxXZ.mX)
+                maxXZ.mX = x;
+            if(y > maxXZ.mY)
+                maxXZ.mY = y;
+            
+            //YZ
+            x = verticesYZ[i][j].X(); y = verticesYZ[i][j].Y();
+            if(x < minYZ.mX)
+                minYZ.mX = x;
+            if(y < minYZ.mY)
+                minYZ.mY = y;
+            if(x > maxYZ.mX)
+                maxYZ.mX = x;
+            if(y > maxYZ.mY)
+                maxYZ.mY = y;
+        }
+    }
+    
+    //Normalize and draw wire frames
+    for(int i = 0; i < polyCount; i++)
+    {
+        //Normalize and project vertices
+        MapToPlaneQuadrant(&verticesXY[i], XY, minXY, maxXY);
+        MapToPlaneQuadrant(&verticesXZ[i], XZ, minXZ, maxXZ);
+        MapToPlaneQuadrant(&verticesYZ[i], YZ, minYZ, maxYZ);
+        
+        deque<Line> edgesXY = polys[i].GetEdges2d(verticesXY[i]);
+        deque<Line> edgesXZ = polys[i].GetEdges2d(verticesXZ[i]);
+        deque<Line> edgesYZ = polys[i].GetEdges2d(verticesYZ[i]);
+        
+        //draw wire frame
+        long edgesCount = edgesXY.size();
+        for(int j = 0; j < edgesCount; j++)
+        {
+            if(polys[i].IsSelected())
+            {
+                GraphicsAlgorithm::LineDDA(edgesXY[j], Renderer::sSubWindow1, true);
+                GraphicsAlgorithm::LineDDA(edgesXZ[j], Renderer::sSubWindow2, true);
+                GraphicsAlgorithm::LineDDA(edgesYZ[j], Renderer::sSubWindow3, true);
+            }
+            else
+            {
+                GraphicsAlgorithm::LineDDA(edgesXY[j], Renderer::sSubWindow1);
+                GraphicsAlgorithm::LineDDA(edgesXZ[j], Renderer::sSubWindow2);
+                GraphicsAlgorithm::LineDDA(edgesYZ[j], Renderer::sSubWindow3);
+            }
+        }
+    }
+}
+
+void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, Vector2i minPoint, Vector2i maxPoint)
+{
+    deque<float> normX, normY;
+    NormalizeVertices(*vertices, &normX, &normY, minPoint, maxPoint);
+    
+    //Define quadrant
+    Vector2i minQuad, maxQuad;
+    minQuad.mX = 0;
+    minQuad.mY = 0;
+    maxQuad.mX = sSubwindowSize.mX - 1;
+    maxQuad.mY = sSubwindowSize.mY - 1;
+    
+    //Map normalized values to quadrant
+    long n = vertices->size();
+    for(int i = 0; i < n; i++)
+    {
+        float zX = normX[i], zY = normY[i];
+        int x, y;
+        
+        x = minQuad.mX + (zX * (maxQuad.mX - minQuad.mX));
+        y = minQuad.mY + (zY * (maxQuad.mY - minQuad.mY));
+        
+        vertices->at(i) = Point(x,y);
+    }
+}
+
+void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, Vector2i minPoint, Vector2i maxPoint)
+{
+    
+    long n = vertices.size();
+    //Find normalized points
+    for(int i = 0; i < n; i++)
+    {
+        float x = vertices[i].X(), y = vertices[i].Y();
+        
+        x = (float)(x - minPoint.mX) / (float)(maxPoint.mX - minPoint.mX);
+        y = (float)(y - minPoint.mY) / (float)(maxPoint.mY - minPoint.mY);
+        
+        if(x < 0 || x > 1 || y < 0 || y > 1)
+        {
+            throw exception();
+        }
+        
+        normX->push_back(x);
+        normY->push_back(y);
+    }
 }
 

@@ -17,6 +17,7 @@
 #include "Line.h"
 #include "Renderer.h"
 #include "Polygon.h"
+#include "Vector3i.h"
 
 const GLint sBitCodeLeft = 0x1;
 const GLint sBitCodeRight = 0x2;
@@ -74,7 +75,7 @@ public:
     static void LineDDA(Line line, int subWindow, bool drawGreen = false);
     static void LineBresenham(Line line, int subWindow);
     static void PolyScanLine(deque<Line> edges, int subWindow, bool drawGreen = false);
-    static Vector2i FindPolyCentroid(Polygon poly);
+    static Vector3i FindPolyCentroid(Polygon poly);
     static void LineClipCohenSutherland(Vector2i minClip, Vector2i maxClip, Line *line);
     static int PolygonClipSutherlandHodgman(Vector2i minClip, Vector2i maxClip, Polygon poly, Vector2i *pOut);
 };

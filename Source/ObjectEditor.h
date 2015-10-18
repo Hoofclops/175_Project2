@@ -15,6 +15,7 @@
 #include "Line.h"
 #include "Renderer.h"
 #include "Vector2i.h"
+#include "Vector3.h"
 
 class ObjectEditor
 {
@@ -38,8 +39,8 @@ public:
     void CreatePolygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections);
     void CreateLine(Line line);
     
-    void TranslatePolygon(Vector2i translationVector);
-    void ScalePolygon(float scaleX, float scaleY);
+    void TranslatePolygon(Vector3i translationVector);
+    void ScalePolygon(float scaleX, float scaleY, float scaleZ);
     void RotatePolygon(double degrees);
 
     deque<Polygon> GetPolygons();

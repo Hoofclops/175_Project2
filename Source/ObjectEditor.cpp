@@ -34,57 +34,61 @@ void ObjectEditor::CreateLine(Line line)
     sLineList.push_back(line);
 }
 
-void ObjectEditor::TranslatePolygon(Vector2i translationVector)
+void ObjectEditor::TranslatePolygon(Vector3i translationVector)
 {
-//    if(sSelectedPoly == -1)
-//        CycleSelectedPoly(true);
-//    
-//    unsigned int id = sSelectedPoly;
-//    if(id >= sPolyList.size())
-//    {
-//        throw invalid_argument("Invalid Polygon ID");
-//    }
-//       
-//    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
-//    
-//    long n = vertices.size();
-//    for(int i = 0; i < n; i++)
-//    {
-//        int x = vertices[i].GetX(), y = vertices[i].GetY();
-//        x += translationVector.mX;
-//        y += translationVector.mY;
-//        
-//        vertices[i].SetX(x);
-//        vertices[i].SetY(y);
-//    }
-//    sPolyList[sSelectedPoly].SetVertices(vertices);
+    if(sSelectedPoly == -1)
+        CycleSelectedPoly(true);
+    
+    unsigned int id = sSelectedPoly;
+    if(id >= sPolyList.size())
+    {
+        throw invalid_argument("Invalid Polygon ID");
+    }
+       
+    deque<Point3d> vertices = sPolyList[sSelectedPoly].GetVertices();
+    
+    long n = vertices.size();
+    for(int i = 0; i < n; i++)
+    {
+        int x = vertices[i].X(), y = vertices[i].Y(), z = vertices[i].Z();
+        x += translationVector.mX;
+        y += translationVector.mY;
+        z += translationVector.mZ;
+        
+        vertices[i].X(x);
+        vertices[i].Y(y);
+        vertices[i].Z(z);
+    }
+    sPolyList[sSelectedPoly].SetVertices(vertices);
 }
 
-void ObjectEditor::ScalePolygon(float scaleX, float scaleY)
+void ObjectEditor::ScalePolygon(float scaleX, float scaleY, float scaleZ)
 {
-//    if(sSelectedPoly == -1)
-//        CycleSelectedPoly(true);
-//    
-//    unsigned int id = sSelectedPoly;
-//    if(id >= sPolyList.size())
-//    {
-//        throw invalid_argument("Invalid Polygon ID");
-//    }
-//    
-//    Vector2i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
-//    deque<Point> vertices = sPolyList[sSelectedPoly].GetVertices();
-//    
-//    long n = vertices.size();
-//    for(int i = 0; i < n; i++)
-//    {
-//        int x = vertices[i].GetX(), y = vertices[i].GetY();
-//        x = (x * scaleX) + (centroid.mX * (1 - scaleX));
-//        y = (y * scaleY) + (centroid.mY * (1 - scaleY));
-//        
-//        vertices[i].SetX(x);
-//        vertices[i].SetY(y);
-//    }
-//    sPolyList[sSelectedPoly].SetVertices(vertices);
+    if(sSelectedPoly == -1)
+        CycleSelectedPoly(true);
+    
+    unsigned int id = sSelectedPoly;
+    if(id >= sPolyList.size())
+    {
+        throw invalid_argument("Invalid Polygon ID");
+    }
+    
+    Vector3i centroid = GraphicsAlgorithm::FindPolyCentroid(sPolyList[sSelectedPoly]);
+    deque<Point3d> vertices = sPolyList[sSelectedPoly].GetVertices();
+    
+    long n = vertices.size();
+    for(int i = 0; i < n; i++)
+    {
+        int x = vertices[i].X(), y = vertices[i].Y(), z = vertices[i].Z();
+        x = (x * scaleX) + (centroid.mX * (1 - scaleX));
+        y = (y * scaleY) + (centroid.mY * (1 - scaleY));
+        z = (z * scaleZ) + (centroid.mZ * (1 - scaleZ));
+        
+        vertices[i].X(x);
+        vertices[i].Y(y);
+        vertices[i].Z(z);
+    }
+    sPolyList[sSelectedPoly].SetVertices(vertices);
 }
 
 void ObjectEditor::RotatePolygon(double degrees)

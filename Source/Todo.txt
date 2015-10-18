@@ -1,7 +1,6 @@
 Todo:
 
 -Change text commands to accomodate new user interaction requirements
--Selection of polygons needs to update across all screens
 -Set up transformations
 
 

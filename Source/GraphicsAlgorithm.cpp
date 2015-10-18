@@ -15,10 +15,6 @@
 
 #include "GraphicsAlgorithm.h"
 
-/*TODO: 
-refactor HandleNegativeSlope() and HandlePositiveSlope()
-*/
-
 /****************************
  *BRESENHAM HELPER FUNCTIONS*
  ****************************/
@@ -634,16 +630,26 @@ void GraphicsAlgorithm::PolyScanLine(deque<Line> edges, int subWindow, bool draw
     }
 }
 
-Vector2i GraphicsAlgorithm::FindPolyCentroid(Polygon poly)
+Vector3i GraphicsAlgorithm::FindPolyCentroid(Polygon poly)
 {
-    return Vector2i();
+    deque<Point3d> vertices = poly.GetVertices();
+    Vector3i centroid;
     
-//    deque<Point> vertices = poly.GetVertices();
-//    
+    //Find average of all vertices
+    long vertexCount = vertices.size();
+    for(int i = 0; i < vertexCount; i++)
+    {
+        centroid.mX += vertices[i].X();
+        centroid.mY += vertices[i].Y();
+        centroid.mZ += vertices[i].Z();
+    }
+    
+    centroid.mX =(int)(((float)centroid.mX / (float)vertexCount) + 0.5f);
+    centroid.mY =(int)(((float)centroid.mY / (float)vertexCount) + 0.5f);
+    centroid.mZ =(int)(((float)centroid.mZ / (float)vertexCount) + 0.5f);
+    
 //    float x0 = 0.0f, y0 = 0.0f, x1 = 0.0f, y1 = 0.0f;
 //    float a, area = 0.0f;
-//    Vector2i centroid;
-//    
 //    long vertexCount = vertices.size();
 //    
 //    //handle first vertexCount-1 vertices
@@ -676,8 +682,8 @@ Vector2i GraphicsAlgorithm::FindPolyCentroid(Polygon poly)
 //    area *= 0.5;
 //    centroid.mX /= (6.0f * area);
 //    centroid.mY /= (6.0f * area);
-//    
-//    return centroid;
+    
+    return centroid;
 }
 
 void GraphicsAlgorithm::LineClipCohenSutherland(Vector2i minClip, Vector2i maxClip, Line *line)

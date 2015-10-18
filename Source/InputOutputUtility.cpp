@@ -136,12 +136,12 @@ void InputOutputUtility::ProcessCommandTranslate(deque<string> tokens)
         return;
     }
     
-//    ObjectEditor::Instance()->TranslatePolygon(vertexPositions[0]);
+    ObjectEditor::Instance()->TranslatePolygon(vertexPositions[0]);
 }
 
 void InputOutputUtility::ProcessCommandScale(deque<string> tokens)
 {
-    if(tokens.size() != 2)
+    if(tokens.size() != 3)
     {
         cout << "Invalid command" << endl;
         return;
@@ -149,8 +149,9 @@ void InputOutputUtility::ProcessCommandScale(deque<string> tokens)
     
     float scaleX = stof(tokens[0]);
     float scaleY = stof(tokens[1]);
+    float scaleZ = stof(tokens[2]);
     
-    ObjectEditor::Instance()->ScalePolygon(scaleX, scaleY);
+    ObjectEditor::Instance()->ScalePolygon(scaleX, scaleY, scaleZ);
 }
 void InputOutputUtility::ProcessCommandRotate(deque<string> tokens)
 {

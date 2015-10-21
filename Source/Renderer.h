@@ -84,8 +84,8 @@ private:
     int PosToIndex(Vector2i pos);
     
     void DrawPolygons();
-    void MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, Vector2i minPoint, Vector2i maxPoint);
-    void NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, Vector2i minPoint, Vector2i maxPoint);
+    void MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, float min, float max);
+    void NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, float min, float max);
 };
 
 #endif /* defined(__Project1__Renderer__) */

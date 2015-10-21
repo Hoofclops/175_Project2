@@ -218,12 +218,12 @@ void Renderer::DrawPolygons()
     }
     
     //Find min and max points for each plane
-    Vector2i minXY = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
-    Vector2i minXZ = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
-    Vector2i minYZ = Vector2i(numeric_limits<int>::max(), numeric_limits<int>::max());
-    Vector2i maxXY = Vector2i(0,0);
-    Vector2i maxXZ = Vector2i(0,0);
-    Vector2i maxYZ = Vector2i(0,0);
+    float minXY = numeric_limits<float>::max();
+    float minXZ = numeric_limits<float>::max();
+    float minYZ = numeric_limits<float>::max();
+    float maxXY = 0;
+    float maxXZ = 0;
+    float maxYZ = 0;
     for(int i = 0; i < polyCount; i++)
     {
         long m = verticesXY[i].size();
@@ -231,36 +231,36 @@ void Renderer::DrawPolygons()
         {
             //XY
             int x = verticesXY[i][j].X(), y = verticesXY[i][j].Y();
-            if(x < minXY.mX)
-                minXY.mX = x;
-            if(y < minXY.mY)
-                minXY.mY = y;
-            if(x > maxXY.mX)
-                maxXY.mX = x;
-            if(y > maxXY.mY)
-                maxXY.mY = y;
+            if(x < minXY)
+                minXY = x;
+            if(y < minXY)
+                minXY = y;
+            if(x > maxXY)
+                maxXY = x;
+            if(y > maxXY)
+                maxXY = y;
             
             //XZ
             x = verticesXZ[i][j].X(); y = verticesXZ[i][j].Y();
-            if(x < minXZ.mX)
-                minXZ.mX = x;
-            if(y < minXZ.mY)
-                minXZ.mY = y;
-            if(x > maxXZ.mX)
-                maxXZ.mX = x;
-            if(y > maxXZ.mY)
-                maxXZ.mY = y;
+            if(x < minXZ)
+                minXZ = x;
+            if(y < minXZ)
+                minXZ = y;
+            if(x > maxXZ)
+                maxXZ = x;
+            if(y > maxXZ)
+                maxXZ = y;
             
             //YZ
             x = verticesYZ[i][j].X(); y = verticesYZ[i][j].Y();
-            if(x < minYZ.mX)
-                minYZ.mX = x;
-            if(y < minYZ.mY)
-                minYZ.mY = y;
-            if(x > maxYZ.mX)
-                maxYZ.mX = x;
-            if(y > maxYZ.mY)
-                maxYZ.mY = y;
+            if(x < minYZ)
+                minYZ = x;
+            if(y < minYZ)
+                minYZ = y;
+            if(x > maxYZ)
+                maxYZ = x;
+            if(y > maxYZ)
+                maxYZ = y;
         }
     }
     
@@ -296,10 +296,10 @@ void Renderer::DrawPolygons()
     }
 }
 
-void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, Vector2i minPoint, Vector2i maxPoint)
+void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane, float min, float max)
 {
     deque<float> normX, normY;
-    NormalizeVertices(*vertices, &normX, &normY, minPoint, maxPoint);
+    NormalizeVertices(*vertices, &normX, &normY, min, max);
     
     //Define quadrant
     Vector2i minQuad, maxQuad;
@@ -322,7 +322,7 @@ void Renderer::MapToPlaneQuadrant(deque<Point> *vertices, ProjectionPlane plane,
     }
 }
 
-void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, Vector2i minPoint, Vector2i maxPoint)
+void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deque<float> *normY, float min, float max)
 {
     
     long n = vertices.size();
@@ -331,8 +331,8 @@ void Renderer::NormalizeVertices(deque<Point> vertices, deque<float> *normX, deq
     {
         float x = vertices[i].X(), y = vertices[i].Y();
         
-        x = (float)(x - minPoint.mX) / (float)(maxPoint.mX - minPoint.mX);
-        y = (float)(y - minPoint.mY) / (float)(maxPoint.mY - minPoint.mY);
+        x = (float)(x - min) / (float)(max - min);
+        y = (float)(y - min) / (float)(max - min);
         
         if(x < 0 || x > 1 || y < 0 || y > 1)
         {

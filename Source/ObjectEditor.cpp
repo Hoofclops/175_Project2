@@ -1,4 +1,4 @@
- //
+//
 //  ObjectEditor.cpp
 //  Project1
 //
@@ -23,7 +23,7 @@ ObjectEditor::ObjectEditor()
     sMaxClip = Vector2i(screenSize.mX, screenSize.mY);
 }
 
-void ObjectEditor::CreatePolygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections)
+void ObjectEditor::CreatePolygon(deque<Vector3> vertPositions, deque<Vector2i> edgeConnections)
 {
     Polygon poly = Polygon(vertPositions, edgeConnections);
     sPolyList.push_back(poly);
@@ -34,7 +34,7 @@ void ObjectEditor::CreateLine(Line line)
     sLineList.push_back(line);
 }
 
-void ObjectEditor::TranslatePolygon(Vector3i translationVector)
+void ObjectEditor::TranslatePolygon(Vector3 translationVector)
 {
     if(sSelectedPoly == -1)
         CycleSelectedPoly(true);

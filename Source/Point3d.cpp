@@ -9,25 +9,25 @@
 #include "Point3d.h"
 Point3d::Point3d(){}
 
-Point3d::Point3d(Vector3i pos)
+Point3d::Point3d(Vector3 pos)
 {
     mPos = pos;
 }
 
-Point3d::Point3d(Vector3i pos, Color color)
+Point3d::Point3d(Vector3 pos, Color color)
 {
     mPos = pos;
     mColor = color;
 }
 
-Point3d::Point3d(int x, int y, int z)
+Point3d::Point3d(float x, float y, float z)
 {
     mPos.mX = x;
     mPos.mY = y;
     mPos.mZ = z;
 }
 
-Point3d::Point3d(int x, int y, int z, Color color)
+Point3d::Point3d(float x, float y, float z, Color color)
 {
     mPos.mX = x;
     mPos.mY = y;
@@ -35,7 +35,7 @@ Point3d::Point3d(int x, int y, int z, Color color)
     mColor = color;
 }
 
-Vector3i Point3d::GetPos()
+Vector3 Point3d::GetPos()
 {
     return mPos;
 }

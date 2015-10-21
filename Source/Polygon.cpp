@@ -8,7 +8,7 @@
 
 #include "Polygon.h"
 
-Polygon::Polygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections)
+Polygon::Polygon(deque<Vector3> vertPositions, deque<Vector2i> edgeConnections)
 {
     long n = vertPositions.size();
     long m = edgeConnections.size();
@@ -36,7 +36,7 @@ deque<Point3d> Polygon::GetVertices()
 {
     return mVertices;
 }
-void Polygon::SetVertex(int index, Vector3i pos)
+void Polygon::SetVertex(int index, Vector3 pos)
 {
     mVertices[index].X(pos.mX);
     mVertices[index].Y(pos.mY);

@@ -114,7 +114,7 @@ void InputOutputUtility::ProcessCommandPolygon(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
 {
-    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3> vertexPositions = ExtractVertices(tokens);
     
     if(vertexPositions.size() != 2)
     {
@@ -128,7 +128,7 @@ void InputOutputUtility::ProcessCommandLine(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandTranslate(deque<string> tokens)
 {
-    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3> vertexPositions = ExtractVertices(tokens);
     
     if(vertexPositions.size() != 1)
     {
@@ -168,7 +168,7 @@ void InputOutputUtility::ProcessCommandRotate(deque<string> tokens)
 
 void InputOutputUtility::ProcessCommandClip(deque<string> tokens)
 {
-    deque<Vector3i> vertexPositions = ExtractVertices(tokens);
+    deque<Vector3> vertexPositions = ExtractVertices(tokens);
 
     if(vertexPositions.size() != 2)
     {
@@ -211,7 +211,7 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
         throw runtime_error("Error opening poly.txt");
     
     const char* tokens[MAX_TOKENS] = {}; // initialize to 0
-    deque<Vector3i> vertexPositions;
+    deque<Vector3> vertexPositions;
     deque<Vector2i> edgeConnections;
     
     while (!fin.eof())
@@ -250,10 +250,10 @@ void InputOutputUtility::ParsePolygonFile(string fileName)
         }
         else if(!parsingEdges)
         {
-            int x = atoi(tokens[0]);
-            int y = atoi(tokens[1]);
-            int z = atoi(tokens[2]);
-            vertexPositions.push_back(Vector3i(x, y, z));
+            float x = atof(tokens[0]);
+            float y = atof(tokens[1]);
+            float z = atof(tokens[2]);
+            vertexPositions.push_back(Vector3(x, y, z));
         }
         else
         {
@@ -330,9 +330,9 @@ deque<string> InputOutputUtility::SplitString(string s, string delims)
 
 }
 
-deque<Vector3i> InputOutputUtility::ExtractVertices(deque<string> tokens)
+deque<Vector3> InputOutputUtility::ExtractVertices(deque<string> tokens)
 {
-    deque<Vector3i> vertexPositions;
+    deque<Vector3> vertexPositions;
     
     long n = tokens.size();
     for(int i = 0; i < n; i++)
@@ -346,8 +346,8 @@ deque<Vector3i> InputOutputUtility::ExtractVertices(deque<string> tokens)
             return vertexPositions;
         }
         
-        Vector3i vertPos = Vector3i(atoi(vertex[0].c_str()), atoi(vertex[1].c_str()), atoi(vertex[2].c_str()));
-        vertexPositions.push_back(Vector3i(vertPos.mX, vertPos.mY, vertPos.mZ));
+        Vector3 vertPos = Vector3(atof(vertex[0].c_str()), atof(vertex[1].c_str()), atof(vertex[2].c_str()));
+        vertexPositions.push_back(Vector3(vertPos.mX, vertPos.mY, vertPos.mZ));
     }
     
     return vertexPositions;

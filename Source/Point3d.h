@@ -9,31 +9,31 @@
 #ifndef Point3d_h
 #define Point3d_h
 
-#include "Vector3i.h"
+#include "Vector3.h"
 #include "Color.h"
 
 class Point3d
 {
 private:
-    Vector3i mPos;
+    Vector3 mPos;
     Color mColor;
     
 public:
     
     Point3d();
-    Point3d(Vector3i pos);
-    Point3d(Vector3i pos, Color color);
-    Point3d(int x, int y, int z);
-    Point3d(int x, int y, int z, Color color);
+    Point3d(Vector3 pos);
+    Point3d(Vector3 pos, Color color);
+    Point3d(float x, float y, float z);
+    Point3d(float x, float y, float z, Color color);
     
-    Vector3i GetPos();
+    Vector3 GetPos();
     
     int X(){return mPos.mX;}
-    void X(int x){mPos.mX = x;}
+    void X(float x){mPos.mX = x;}
     int Y(){return mPos.mY;}
-    void Y(int y){mPos.mY = y;}
+    void Y(float y){mPos.mY = y;}
     int Z(){return mPos.mZ;}
-    void Z(int z){mPos.mZ = z;}
+    void Z(float z){mPos.mZ = z;}
     
     Color GetColor(){return mColor;}
     void SetColor( Color color){mColor = color;}

@@ -17,7 +17,7 @@
 #include "Point.h"
 #include "Line.h"
 #include "Line3d.h"
-#include "Vector3i.h"
+#include "Vector3.h"
 #include "Vector2i.h"
 
 class Polygon
@@ -30,10 +30,10 @@ private:
     
 public:
     Polygon();
-    Polygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections);
+    Polygon(deque<Vector3> vertPositions, deque<Vector2i> edgeConnections);
     
     deque<Point3d> GetVertices();
-    void SetVertex(int index, Vector3i pos);
+    void SetVertex(int index, Vector3 pos);
     void SetVertices(deque<Point3d> verts);
 
     deque<Line3d> GetEdges();

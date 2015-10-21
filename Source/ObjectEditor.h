@@ -36,10 +36,10 @@ public:
         return sInstance;
     }
     
-    void CreatePolygon(deque<Vector3i> vertPositions, deque<Vector2i> edgeConnections);
+    void CreatePolygon(deque<Vector3> vertPositions, deque<Vector2i> edgeConnections);
     void CreateLine(Line line);
     
-    void TranslatePolygon(Vector3i translationVector);
+    void TranslatePolygon(Vector3 translationVector);
     void ScalePolygon(float scaleX, float scaleY, float scaleZ);
     void RotatePolygon(double degrees);
 

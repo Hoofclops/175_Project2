@@ -39,7 +39,7 @@ private:
     static void ProcessCommandSaveFile(deque<string> tokens);
     
     static deque<string> SplitString(string s, string delims);
-    static deque<Vector3i> ExtractVertices(deque<string> tokens);
+    static deque<Vector3> ExtractVertices(deque<string> tokens);
     
 public:
     static void QueryWindowSize();

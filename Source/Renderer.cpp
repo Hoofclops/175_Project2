@@ -61,6 +61,16 @@ void Renderer::DrawScene()
 {
     ClearBuffer();
     
+    //Colorize quadrants
+    int windowPixelCount = (sScreenSize.mX) * (sScreenSize.mY) * 3;
+    int subWindowPixelCount = windowPixelCount / 4;
+    for(int i = 0; i < subWindowPixelCount; i++)
+    {
+        sPixelBuffer1[i] = 0.55f;
+        sPixelBuffer2[i] = 0.4f;
+        sPixelBuffer3[i] = 0.25f;
+    }
+    
     DrawPolygons();
     
     //Post redisplay for all sub windows

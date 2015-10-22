@@ -15,6 +15,7 @@
 		6D7223961BB629070001FB75 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D7223951BB629070001FB75 /* main.cpp */; };
 		6D72239F1BB62A8F0001FB75 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D72239E1BB62A8F0001FB75 /* GLUT.framework */; };
 		6D7223A11BB62A970001FB75 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7223A01BB62A970001FB75 /* OpenGL.framework */; };
+		6D9BB5F21BD8A4F4007EEC5F /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D9BB5F01BD8A4F4007EEC5F /* Matrix.cpp */; settings = {ASSET_TAGS = (); }; };
 		6DB884D71BB9EBCF00D72B71 /* ObjectEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB884D51BB9EBCF00D72B71 /* ObjectEditor.cpp */; };
 		6DD7F9741BB6320600086AAB /* Point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DD7F9721BB6320600086AAB /* Point.cpp */; };
 		6DD7F9771BB6614000086AAB /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DD7F9751BB6614000086AAB /* Vector3.cpp */; };
@@ -54,6 +55,8 @@
 		6D7223951BB629070001FB75 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6D72239E1BB62A8F0001FB75 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		6D7223A01BB62A970001FB75 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		6D9BB5F01BD8A4F4007EEC5F /* Matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; };
+		6D9BB5F11BD8A4F4007EEC5F /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
 		6DB884D51BB9EBCF00D72B71 /* ObjectEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectEditor.cpp; sourceTree = "<group>"; };
 		6DB884D61BB9EBCF00D72B71 /* ObjectEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectEditor.h; sourceTree = "<group>"; };
 		6DD7F9721BB6320600086AAB /* Point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Point.cpp; sourceTree = "<group>"; };
@@ -138,6 +141,8 @@
 				6DD7F9941BB7324700086AAB /* Color.h */,
 				6D3D4EBF1BCF3830001BC4BA /* Vector3i.cpp */,
 				6D3D4EC01BCF3830001BC4BA /* Vector3i.h */,
+				6D9BB5F01BD8A4F4007EEC5F /* Matrix.cpp */,
+				6D9BB5F11BD8A4F4007EEC5F /* Matrix.h */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -224,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D9BB5F21BD8A4F4007EEC5F /* Matrix.cpp in Sources */,
 				6D3D4EC71BCF635C001BC4BA /* Line3d.cpp in Sources */,
 				6DD7F9741BB6320600086AAB /* Point.cpp in Sources */,
 				6DD7F9871BB6A27600086AAB /* Line.cpp in Sources */,

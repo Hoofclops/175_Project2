@@ -14,9 +14,58 @@
 #include "Renderer.h"
 #include "ObjectEditor.h"
 #include "InputOutputUtility.h"
+#include "Matrix.h"
 
 int main(int argc, char *argv[])
-{    
+{
+    //testing matrices
+    
+//    cout << "Matrix A" << endl;
+//    deque<float> aDeque;
+//    for(int i = 1; i < 17; i++)
+//    {
+//        aDeque.push_back(i);
+//    }
+//    Matrix a = Matrix(4,4,aDeque);
+//    a.PrintMatrix();
+//    cout << endl;
+//
+//    
+//    cout << "Matrix B" << endl;
+//    deque<float> bDeque;
+//    for(int i = 5; i < 21; i++)
+//    {
+//        bDeque.push_back(i);
+//    }
+//    Matrix b = Matrix(4,4,bDeque);
+//    b.PrintMatrix();
+//    cout << endl;
+//    
+//    cout << "Multiply A and B" << endl;
+//    a.Multiply(b).PrintMatrix();
+//    cout << endl;
+//    
+//    
+//    cout << "Multiply A and vect" << endl;
+//    Vector3 vect = Vector3(1, 2, 3);
+//    Vector3 result = a.MultiplyVector(vect);
+//    cout << result.mX << " " << result.mY << " " << result.mZ << endl;
+//    cout << endl;
+//    
+//    cout << "Inverse c" << endl;
+//    Matrix inverse = Matrix(4,4);
+//    deque<float> cDeque;
+//    cDeque.push_back(1);cDeque.push_back(1);cDeque.push_back(1);cDeque.push_back(0);
+//    cDeque.push_back(0);cDeque.push_back(3);cDeque.push_back(1);cDeque.push_back(2);
+//    cDeque.push_back(2);cDeque.push_back(3);cDeque.push_back(1);cDeque.push_back(0);
+//    cDeque.push_back(1);cDeque.push_back(0);cDeque.push_back(2);cDeque.push_back(1);
+//    Matrix c = Matrix(4,4,cDeque);
+//    if(c.Invert4by4(&inverse))
+//        inverse.PrintMatrix();
+//    else
+//        cout << "No inverse exists" << endl;
+//    cout << endl;
+        
     Renderer::Instance()->InitWindow(600, 600);
     Vector2i screenSize = Renderer::Instance()->ScreenSize();
     

@@ -163,7 +163,7 @@ void InputOutputUtility::ProcessCommandRotate(deque<string> tokens)
     
     double degrees = stod(tokens[0]);
     
-    ObjectEditor::Instance()->RotatePolygon(degrees);
+//    ObjectEditor::Instance()->RotatePolygon(degrees);
 }
 
 void InputOutputUtility::ProcessCommandClip(deque<string> tokens)
